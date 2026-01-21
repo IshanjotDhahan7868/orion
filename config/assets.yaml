@@ -1,0 +1,122 @@
+# ORION asset → node mapping with explicit types.
+# Types: equity | etf | commodity
+
+NVDA:
+  type: equity
+  nodes: [AI_Compute_Demand, AI_Models_and_Software, Advanced_Logic_Chips]
+
+AMD:
+  type: equity
+  nodes: [AI_Compute_Demand, Advanced_Logic_Chips]
+
+TSM:
+  type: equity
+  nodes: [Semiconductor_Manufacturing, Advanced_Logic_Chips]
+
+ASML:
+  type: equity
+  nodes: [Semiconductor_Equipment, Semiconductor_Manufacturing]
+
+INTC:
+  type: equity
+  nodes: [Semiconductor_Manufacturing, Advanced_Logic_Chips]
+
+AMAT:
+  type: equity
+  nodes: [Semiconductor_Equipment, Semiconductor_Materials]
+
+LRCX:
+  type: equity
+  nodes: [Semiconductor_Equipment]
+
+MRVL:
+  type: equity
+  nodes: [AI_Networking, Advanced_Logic_Chips]
+
+QCOM:
+  type: equity
+  nodes: [Advanced_Logic_Chips]
+
+BIDU:
+  type: equity
+  nodes: [AI_Models_and_Software]
+
+MSFT:
+  type: equity
+  nodes: [AI_Models_and_Software, Data_Centers]
+
+GOOGL:
+  type: equity
+  nodes: [AI_Models_and_Software, Data_Centers]
+
+META:
+  type: equity
+  nodes: [AI_Models_and_Software, Data_Centers]
+
+ORCL:
+  type: equity
+  nodes: [Data_Centers]
+
+EQIX:
+  type: equity
+  nodes: [Data_Centers]
+
+NEE:
+  type: equity
+  nodes: [Power_Grid_Infrastructure, Power_Generation]
+
+DUK:
+  type: equity
+  nodes: [Power_Grid_Infrastructure, Power_Generation]
+
+XEL:
+  type: equity
+  nodes: [Power_Grid_Infrastructure, Power_Generation, Energy_Storage]
+
+ENPH:
+  type: equity
+  nodes: [Electrical_Equipment, Power_Generation, Energy_Storage]
+
+FSLR:
+  type: equity
+  nodes: [Power_Generation, Semiconductor_Materials]
+
+SOXX:
+  type: etf
+  nodes: [Semiconductor_Manufacturing, Semiconductor_Equipment, Advanced_Logic_Chips]
+
+SMH:
+  type: etf
+  nodes: [Semiconductor_Manufacturing, Semiconductor_Equipment, Advanced_Logic_Chips]
+
+XLK:
+  type: etf
+  nodes: [AI_Models_and_Software, Data_Centers]
+
+XLU:
+  type: etf
+  nodes: [Power_Grid_Infrastructure, Power_Generation]
+
+ICLN:
+  type: etf
+  nodes: [Power_Generation]
+
+COPPER:
+  type: commodity
+  nodes: [Copper]
+
+SILICON:
+  type: commodity
+  nodes: [Semiconductor_Materials]
+
+LITHIUM:
+  type: commodity
+  nodes: [Lithium]
+
+CATHODE:
+  type: commodity
+  nodes: [Cathode_Materials]
+
+COBALT:
+  type: commodity
+  nodes: [Cobalt]

@@ -1,0 +1,56 @@
+advanced_chips:
+  aliases:
+    - advanced chips
+    - cutting edge semiconductors
+  nodes:
+    - Advanced_Logic_Chips
+
+ai_models:
+  aliases:
+    - ai models
+    - large language models
+    - llms
+  nodes:
+    - AI_Models_and_Software
+
+ai_compute:
+  aliases:
+    - ai compute
+    - gpu compute
+  nodes:
+    - AI_Compute_Demand
+
+data_centers:
+  aliases:
+    - data centres
+    - cloud data centers
+  nodes:
+    - Data_Centers
+
+semiconductor_equipment:
+  aliases:
+    - chipmaking equipment
+    - lithography tools
+  nodes:
+    - Semiconductor_Equipment
+
+semiconductor_materials:
+  aliases:
+    - wafers
+    - silicon materials
+  nodes:
+    - Semiconductor_Materials
+
+ai_networking:
+  aliases:
+    - high speed networking
+    - ai networking
+  nodes:
+    - AI_Networking
+
+energy_storage:
+  aliases:
+    - batteries
+    - grid storage
+  nodes:
+    - Energy_Storage

@@ -1,0 +1,89 @@
+TSM:
+  aliases:
+    - TSMC
+    - Taiwan Semiconductor
+  nodes:
+    - Semiconductor_Manufacturing
+    - Advanced_Logic_Chips
+
+NVDA:
+  aliases:
+    - Nvidia
+  nodes:
+    - AI_Compute_Demand
+    - AI_Models_and_Software
+
+AMD:
+  aliases:
+    - Advanced Micro Devices
+  nodes:
+    - AI_Compute_Demand
+    - Advanced_Logic_Chips
+
+INTC:
+  aliases:
+    - Intel
+  nodes:
+    - Semiconductor_Manufacturing
+    - Advanced_Logic_Chips
+
+ASML:
+  aliases:
+    - ASML Holding
+  nodes:
+    - Semiconductor_Equipment
+    - Advanced_Logic_Chips
+
+AMAT:
+  aliases:
+    - Applied Materials
+  nodes:
+    - Semiconductor_Equipment
+    - Semiconductor_Materials
+
+LRCX:
+  aliases:
+    - Lam Research
+  nodes:
+    - Semiconductor_Equipment
+
+MRVL:
+  aliases:
+    - Marvell
+  nodes:
+    - AI_Networking
+
+QCOM:
+  aliases:
+    - Qualcomm
+  nodes:
+    - Advanced_Logic_Chips
+
+MSFT:
+  aliases:
+    - Microsoft
+  nodes:
+    - AI_Models_and_Software
+    - Data_Centers
+
+GOOGL:
+  aliases:
+    - Alphabet
+    - Google
+  nodes:
+    - AI_Models_and_Software
+    - Data_Centers
+
+META:
+  aliases:
+    - Meta Platforms
+    - Facebook
+  nodes:
+    - AI_Models_and_Software
+    - Data_Centers
+
+ORCL:
+  aliases:
+    - Oracle
+  nodes:
+    - Data_Centers

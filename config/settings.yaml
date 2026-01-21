@@ -1,0 +1,7 @@
+# Global settings for ORION
+enabled_themes:
+  - AI
+  - Energy
+  - Defense
+data_refresh_interval: daily
+market_data_source: 'eod'

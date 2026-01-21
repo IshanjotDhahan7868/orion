@@ -1,0 +1,176 @@
+ORION: What It Is, What It’s Not
+What ORION Is
+
+ORION is a macro-signal investing system designed to detect structural change in the world and model how that change propagates through the global economy over time.
+
+ORION does not predict prices.
+It models causality.
+
+At its core, ORION:
+
+Ingests real-world events (policy, CapEx, conflict, technology)
+
+Classifies them into structured event types
+
+Propagates their impact through an explicit dependency graph
+
+Surfaces second- and third-order beneficiaries before they are obvious
+
+Produces human-readable, explainable investment signals
+
+ORION is built for durable edge, not short-term excitement.
+
+What ORION Is Not
+
+ORION is not:
+
+A trading bot
+
+A price-prediction engine
+
+A sentiment or hype detector
+
+A black-box AI system
+
+A day-trading or scalping tool
+
+ORION exists to answer one question:
+
+“What structural change is happening, how will it ripple through the system, and who benefits over time?”
+
+Core Themes (Structural Pillars)
+
+ORION organizes the world into persistent themes. Events attach to themes; themes anchor the graph.
+
+AI
+
+Compute, models, data centers, inference, automation, productivity amplification, and downstream demand for power, silicon, and infrastructure.
+
+Energy
+
+Electricity generation, grid capacity, fossil fuels, renewables, nuclear, storage, and energy security.
+
+Defense
+
+Military spending, conflict, deterrence, aerospace, cyber defense, surveillance, and national security supply chains.
+
+Infrastructure
+
+Physical build-out: data centers, grids, transportation, housing, water, industrial construction.
+
+Semiconductors
+
+Chips, fabs, equipment, materials, supply chains, and compute constraints.
+
+Commodities
+
+Raw inputs: copper, lithium, oil, gas, uranium, steel, cement, rare earths.
+
+Geopolitics / Policy
+
+Regulation, trade restrictions, sanctions, subsidies, industrial policy, and sovereign strategy.
+
+(Themes are not mutually exclusive—nodes can belong to multiple.)
+
+Event Types (With 1-Line Examples)
+
+Each real-world change is normalized into an event object.
+
+CapEx Expansion
+Example: A hyperscaler announces $50B in new data center spending.
+
+Regulatory Change
+Example: Government introduces semiconductor export controls.
+
+Supply Constraint
+Example: Copper mine shutdown reduces global output.
+
+Demand Acceleration
+Example: AI model scaling drives surge in GPU demand.
+
+Conflict / Geopolitical Shock
+Example: Regional war disrupts energy shipping lanes.
+
+Technological Breakthrough
+Example: New process node materially improves chip performance per watt.
+
+First-, Second-, and Third-Order Effects
+
+ORION explicitly models order of impact.
+
+First-Order Effects
+
+Immediate, obvious, directly affected.
+
+Example: AI CapEx → GPU manufacturers benefit
+
+Second-Order Effects
+
+Downstream enablers or bottlenecks.
+
+Example: GPU demand → power utilities, grid equipment, cooling systems benefit
+
+Third-Order Effects
+
+Non-obvious structural beneficiaries.
+
+Example: Grid strain → copper, transformers, construction firms, permitting services
+
+ORION’s edge lives primarily in second- and third-order effects.
+
+Lag: Timing Between Cause and Effect
+
+Lag is the time delay between an event and its economic impact.
+
+ORION treats time as a first-class variable, not an afterthought.
+
+Lag Scenarios
+
+Immediate (weeks):
+Sanctions → commodity price dislocations
+
+Medium (months):
+CapEx announcement → equipment orders → supplier revenues
+
+Long (years):
+Policy shift → infrastructure build-out → commodity supercycle
+
+Every edge in ORION’s graph has:
+
+Direction
+
+Impact strength
+
+Expected lag
+
+5 Things ORION Will Not Do
+
+No Day Trading
+ORION does not optimize for intraday or short-term price moves.
+
+No Price Prediction
+It does not forecast prices, targets, or exact timing.
+
+No Black-Box AI Magic
+Every signal must be explainable and traceable.
+
+No Hype or Sentiment Chasing
+Headlines without structural impact are filtered out.
+
+No Execution Without Understanding
+ORION informs decisions; it does not force trades.
+
+Closing Principle
+
+ORION is a thinking system before it is an investing system.
+
+If a signal cannot answer:
+
+What changed?
+Why does it matter?
+How does it propagate?
+Who benefits, and when?
+
+Then ORION ignores it.
+This document is the bedrock.
+Everything else builds on this—or it doesn’t belong.

@@ -1,0 +1,13 @@
+# Mapping between graph nodes and tradable assets
+ai_adoption:
+  tickers: ['MSFT', 'GOOGL']
+  etfs: ['QQQ']
+accelerators:
+  tickers: ['NVDA', 'AMD']
+  etfs: ['SMH']
+memory:
+  tickers: ['MU', 'HYNIX']
+  etfs: ['SOXX']
+power_grid:
+  tickers: ['NEE', 'DUK']
+  etfs: ['XLU']
