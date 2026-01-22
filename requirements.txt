@@ -1,2 +1,6 @@
 PyYAML>=6.0
 pytest>=8.0
+yfinance>=0.2.54
+pandas>=2.2
+numpy>=1.26
+

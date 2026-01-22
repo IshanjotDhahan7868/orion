@@ -1,0 +1,976 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>ORION — Signals</title>
+  <style>
+    /* -----------------------
+       Theme tokens (CSS vars)
+       ----------------------- */
+    :root {
+      --bg: #0b0f17;
+      --panel: #0f1623;
+      --panel-2: #121b2b;
+      --text: #e8eefc;
+      --muted: #9aa7c0;
+      --border: rgba(255,255,255,0.08);
+      --border-2: rgba(255,255,255,0.12);
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --chip: rgba(255,255,255,0.06);
+      --chip-2: rgba(255,255,255,0.10);
+      --btn: rgba(255,255,255,0.08);
+      --btn-hover: rgba(255,255,255,0.12);
+      --accent: #7aa2ff;
+      --good: #3ddc97;
+      --warn: #ffd166;
+      --bad: #ff5c7a;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      --radius: 14px;
+      --radius-sm: 10px;
+      --pad: 14px;
+      --pad-lg: 18px;
+      --table-row: rgba(255,255,255,0.03);
+      --table-row-hover: rgba(255,255,255,0.06);
+    }
+
+    [data-theme="light"] {
+      --bg: #f7f8fb;
+      --panel: #ffffff;
+      --panel-2: #ffffff;
+      --text: #0c1220;
+      --muted: #5a657a;
+      --border: rgba(0,0,0,0.08);
+      --border-2: rgba(0,0,0,0.12);
+      --shadow: 0 10px 30px rgba(0,0,0,0.08);
+      --chip: rgba(0,0,0,0.05);
+      --chip-2: rgba(0,0,0,0.08);
+      --btn: rgba(0,0,0,0.06);
+      --btn-hover: rgba(0,0,0,0.10);
+      --accent: #2f63ff;
+      --good: #0f9d58;
+      --warn: #b45309;
+      --bad: #dc2626;
+      --table-row: rgba(0,0,0,0.02);
+      --table-row-hover: rgba(0,0,0,0.05);
+    }
+
+    /* -----------------------
+       Base
+       ----------------------- */
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background: radial-gradient(1200px 700px at 10% 0%, rgba(122,162,255,0.10), transparent 45%),
+                  radial-gradient(900px 600px at 90% 20%, rgba(61,220,151,0.10), transparent 45%),
+                  var(--bg);
+      color: var(--text);
+    }
+    a { color: inherit; }
+    .container { max-width: 1400px; margin: 0 auto; padding: 18px; }
+
+    /* -----------------------
+       Top bar
+       ----------------------- */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+      box-shadow: var(--shadow);
+    }
+    .brand {
+      display:flex; align-items:baseline; gap:10px; flex-wrap: wrap;
+    }
+    .brand h1 {
+      font-size: 20px;
+      margin: 0;
+      letter-spacing: 0.2px;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 12px;
+      font-family: var(--mono);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .tab {
+      border: 1px solid var(--border);
+      background: var(--btn);
+      color: var(--text);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform .05s ease, background .15s ease;
+    }
+    .tab:hover { background: var(--btn-hover); }
+    .tab:active { transform: translateY(1px); }
+    .tab.active {
+      border-color: rgba(122,162,255,0.55);
+      background: rgba(122,162,255,0.18);
+    }
+
+    .actions {
+      display:flex; gap:8px; flex-wrap: wrap; align-items:center;
+    }
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--btn);
+      color: var(--text);
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-size: 13px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .btn:hover { background: var(--btn-hover); }
+    .btn.primary {
+      border-color: rgba(122,162,255,0.55);
+      background: rgba(122,162,255,0.18);
+    }
+    .btn.ghost {
+      background: transparent;
+    }
+
+    /* -----------------------
+       Layout
+       ----------------------- */
+    .grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 1100px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .panel-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+    }
+    .panel-header .title {
+      display:flex; flex-direction: column; gap: 4px;
+    }
+    .panel-header .title h2 {
+      font-size: 14px;
+      margin: 0;
+      letter-spacing: 0.2px;
+    }
+    .panel-header .title .hint {
+      color: var(--muted);
+      font-size: 12px;
+      font-family: var(--mono);
+    }
+
+    .panel-body { padding: 14px 16px; }
+
+    /* -----------------------
+       Chips / badges
+       ----------------------- */
+    .chips { display:flex; gap:8px; flex-wrap: wrap; }
+    .chip {
+      border: 1px solid var(--border);
+      background: var(--chip);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      color: var(--text);
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .chip b { font-family: var(--mono); font-weight: 700; }
+    .badge {
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      background: var(--chip);
+      white-space: nowrap;
+    }
+    .badge.ok { border-color: rgba(61,220,151,0.35); }
+    .badge.skipped { border-color: rgba(255,209,102,0.45); }
+    .badge.missing { border-color: rgba(255,92,122,0.40); }
+
+    .dot { width:8px; height:8px; border-radius:999px; display:inline-block; }
+    .dot.ok { background: var(--good); }
+    .dot.skipped { background: var(--warn); }
+    .dot.missing { background: var(--bad); }
+
+    /* -----------------------
+       Controls
+       ----------------------- */
+    .controls {
+      display:flex;
+      gap:10px;
+      flex-wrap: wrap;
+      align-items:center;
+    }
+    .input, .select {
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      padding: 9px 10px;
+      border-radius: 12px;
+      font-size: 13px;
+      outline: none;
+      min-width: 220px;
+    }
+    .select { min-width: 160px; }
+    .input::placeholder { color: rgba(154,167,192,0.75); }
+    [data-theme="light"] .input::placeholder { color: rgba(90,101,122,0.7); }
+
+    .toggleRow { display:flex; gap:8px; align-items:center; flex-wrap: wrap; }
+    .toggle {
+      display:flex; gap:8px; align-items:center;
+      border: 1px solid var(--border);
+      background: var(--chip);
+      border-radius: 12px;
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .toggle input { accent-color: var(--accent); }
+
+    /* -----------------------
+       Table
+       ----------------------- */
+    .table-wrap { overflow: auto; border-top: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; min-width: 900px; }
+    th, td { padding: 12px 12px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: top; }
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      background: var(--panel);
+      cursor: pointer;
+      text-align: left;
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+    tr { background: transparent; }
+    tbody tr:nth-child(odd) { background: var(--table-row); }
+    tbody tr:hover { background: var(--table-row-hover); }
+    tbody tr.selected { outline: 2px solid rgba(122,162,255,0.35); }
+
+    .mono { font-family: var(--mono); }
+    .right { text-align: right; }
+
+    /* -----------------------
+       Signal card
+       ----------------------- */
+    .cardTitle {
+      display:flex; justify-content: space-between; gap:10px; align-items:flex-start; flex-wrap: wrap;
+    }
+    .cardTitle h3 { margin: 0; font-size: 16px; letter-spacing: 0.2px; }
+    .cardTitle .sub { color: var(--muted); font-size: 12px; font-family: var(--mono); margin-top: 2px; }
+    .kv { display:grid; grid-template-columns: 120px 1fr; gap: 8px 10px; margin-top: 12px; }
+    .k { color: var(--muted); font-size: 12px; }
+    .v { font-size: 13px; }
+    .path {
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.4;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      overflow-wrap: anywhere;
+    }
+    .hr { height:1px; background: var(--border); margin: 14px 0; }
+    .small { font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .pillBtn {
+      border: 1px solid var(--border);
+      background: var(--btn);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      user-select:none;
+    }
+    .pillBtn:hover { background: var(--btn-hover); }
+    .pillBtn.primary { border-color: rgba(122,162,255,0.55); background: rgba(122,162,255,0.18); }
+
+    /* -----------------------
+       Pages
+       ----------------------- */
+    .page { display:none; }
+    .page.active { display:block; }
+
+    /* Backtest stub */
+    .stub {
+      padding: 18px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .stub code { font-family: var(--mono); padding: 2px 6px; background: var(--chip); border-radius: 8px; border: 1px solid var(--border); }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand">
+        <h1>ORION</h1>
+        <div class="subtitle">Signals • Week 6 output • Local dashboard</div>
+      </div>
+
+      <div class="tabs" id="tabs">
+        <div class="tab active" data-page="signals">Signals</div>
+        <div class="tab" data-page="brief">Brief</div>
+        <div class="tab" data-page="analytics">Analytics</div>
+        <div class="tab" data-page="backtest">Backtest</div>
+      </div>
+
+      <div class="actions">
+        <button class="btn ghost" id="themeBtn">Theme: Dark</button>
+        <a class="btn" id="openJson" href="/data/processed/signals_v1_2.json" target="_blank" rel="noreferrer">Open JSON</a>
+        <a class="btn" id="openBrief" href="/data/processed/weekly_brief.md" target="_blank" rel="noreferrer">Open Brief</a>
+      </div>
+    </div>
+
+    <!-- Pages -->
+    <div id="page-signals" class="page active">
+      <div class="grid">
+        <!-- LEFT: Table -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="title">
+              <h2>Signals Table</h2>
+              <div class="hint">Source: <span class="mono" id="sourcePath">/data/processed/signals_week6.csv</span></div>
+            </div>
+            <div class="chips" id="kpis">
+              <!-- injected -->
+            </div>
+          </div>
+
+          <div class="panel-body">
+            <div class="controls">
+              <input class="input" id="q" placeholder="Search asset / why_path / reason…" />
+              <select class="select" id="status">
+                <option value="">All statuses</option>
+                <option value="ok">ok</option>
+                <option value="skipped">skipped</option>
+                <option value="missing">missing</option>
+              </select>
+              <select class="select" id="sort">
+                <option value="adj_score">Sort: adj_score</option>
+                <option value="score_norm">Sort: score_norm</option>
+                <option value="rs_1m">Sort: rs_1m</option>
+                <option value="rs_3m">Sort: rs_3m</option>
+                <option value="when_months">Sort: when_months</option>
+              </select>
+              <select class="select" id="dir">
+                <option value="desc">desc</option>
+                <option value="asc">asc</option>
+              </select>
+            </div>
+
+            <div class="toggleRow" style="margin-top:12px;">
+              <div class="toggle"><input type="checkbox" id="showAdvanced" /> <label for="showAdvanced">Show advanced columns</label></div>
+              <div class="toggle"><input type="checkbox" id="stickyDetail" checked /> <label for="stickyDetail">Sticky details panel</label></div>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table id="tbl">
+              <thead><tr id="hdr"></tr></thead>
+              <tbody id="body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- RIGHT: Detail -->
+        <div class="panel" id="detailPanel">
+          <div class="panel-header">
+            <div class="title">
+              <h2>Signal Card</h2>
+              <div class="hint">Click any row on the left</div>
+            </div>
+            <div class="toggleRow">
+              <button class="pillBtn" id="copyRowBtn">Copy JSON</button>
+              <button class="pillBtn primary" id="chartBtn">Open chart</button>
+            </div>
+          </div>
+
+          <div class="panel-body" id="detail">
+            <div class="stub">
+              Select a signal to see the human-readable explanation here.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Brief -->
+    <div id="page-brief" class="page">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="title">
+            <h2>Weekly Brief</h2>
+            <div class="hint">Rendered from <span class="mono">/data/processed/weekly_brief.md</span></div>
+          </div>
+          <div class="toggleRow">
+            <button class="pillBtn" id="reloadBriefBtn">Reload</button>
+          </div>
+        </div>
+        <div class="panel-body" id="briefBox">
+          <div class="stub">Loading brief…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analytics -->
+    <div id="page-analytics" class="page">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="title">
+            <h2>Analytics (v1)</h2>
+            <div class="hint">Quick stats from the current CSV batch</div>
+          </div>
+        </div>
+        <div class="panel-body" id="analyticsBox">
+          <div class="stub">Loading analytics…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Backtest stub -->
+    <div id="page-backtest" class="page">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="title">
+            <h2>Backtest</h2>
+            <div class="hint">Coming next: multi-batch history + forward returns</div>
+          </div>
+        </div>
+        <div class="stub">
+          Backtesting requires:
+          <ul>
+            <li>Batch history storage (<code>batches/&lt;batch_id&gt;/</code>)</li>
+            <li>Event timestamps (from Week 4 events store)</li>
+            <li>Forward return windows (1w/1m/3m) from OHLCV</li>
+          </ul>
+          Next step: we’ll add a <code>batches/index.json</code> manifest + a batch dropdown in the UI.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  // -------------------------
+  // Config
+  // -------------------------
+  const CSV_PATH = "/data/processed/signals_week6.csv";
+  const BRIEF_PATH = "/data/processed/weekly_brief.md";
+
+  // Columns we like (fallback to whatever CSV has)
+  const CORE_COLS = ["asset","symbol","market_status","reason","adj_score","score_norm","rs_1m","rs_3m","when_months","why_path"];
+  const ADV_COLS  = ["event_id","rank","score_raw","price","ma50","ma200","vol_z20","above_ma50","above_ma200","golden","confirm_score","confirm_rs1m","confirm_rs3m","confirm_trend","confirm_vol"];
+
+  // -------------------------
+  // State
+  // -------------------------
+  let rows = [];
+  let columns = [];
+  let currentSort = "adj_score";
+  let currentDir = "desc";
+  let selectedIndex = null;
+  let lastSelectedRow = null;
+
+  // -------------------------
+  // Theme toggle (persists)
+  // -------------------------
+  function setTheme(mode) {
+    document.documentElement.setAttribute("data-theme", mode);
+    localStorage.setItem("orion_theme", mode);
+    const btn = document.getElementById("themeBtn");
+    btn.textContent = "Theme: " + (mode === "light" ? "Light" : "Dark");
+  }
+  function toggleTheme() {
+    const cur = document.documentElement.getAttribute("data-theme") || "dark";
+    setTheme(cur === "dark" ? "light" : "dark");
+  }
+
+  // -------------------------
+  // CSV parsing (handles quoted)
+  // -------------------------
+  function parseCSV(text) {
+    const lines = text.trim().split(/\r?\n/);
+    const headers = lines[0].split(",").map(h => h.trim());
+    return lines.slice(1).map(line => {
+      const cells = [];
+      let cur = "", inQ = false;
+      for (let i=0;i<line.length;i++){
+        const ch=line[i];
+        if (ch === '"' && line[i+1] === '"'){ cur += '"'; i++; continue; }
+        if (ch === '"'){ inQ = !inQ; continue; }
+        if (ch === "," && !inQ){ cells.push(cur); cur=""; continue; }
+        cur += ch;
+      }
+      cells.push(cur);
+      const row = {};
+      headers.forEach((h, idx) => row[h] = cells[idx] ?? "");
+      return row;
+    });
+  }
+
+  function toNum(x){
+    const n = Number(x);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function fmt(x, digits=3) {
+    const n = toNum(x);
+    if (n === null) return (x ?? "");
+    return n.toFixed(digits);
+  }
+
+  function statusBadge(status, reason) {
+    const s = (status || "").toLowerCase();
+    const cls = (s === "ok") ? "ok" : (s === "skipped") ? "skipped" : "missing";
+    const dot = `<span class="dot ${cls}"></span>`;
+    const rr = reason ? ` <span class="mono" style="opacity:.75">(${escapeHtml(reason)})</span>` : "";
+    return `<span class="badge ${cls}">${dot}${escapeHtml(s || "unknown")}${rr}</span>`;
+  }
+
+  function escapeHtml(str) {
+    return String(str ?? "").replace(/[&<>"']/g, s => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[s]));
+  }
+
+  // -------------------------
+  // KPI / analytics helpers
+  // -------------------------
+  function computeKpis(list) {
+    const n = list.length;
+    const ok = list.filter(r => (r.market_status || "").toLowerCase() === "ok").length;
+    const skipped = list.filter(r => (r.market_status || "").toLowerCase() === "skipped").length;
+
+    const scores = list.map(r => toNum(r.adj_score ?? r.score_norm)).filter(v => v !== null);
+    const avg = scores.length ? (scores.reduce((a,b)=>a+b,0) / scores.length) : null;
+
+    const confirmed = list.filter(r => {
+      const a50 = toNum(r.above_ma50);
+      const g = toNum(r.golden);
+      return a50 === 1 && g === 1;
+    }).length;
+
+    return {
+      count: n,
+      ok, skipped,
+      avg_score: avg,
+      confirmed,
+      confirmed_pct: n ? (confirmed / n) : 0
+    };
+  }
+
+  function renderKpis() {
+    const k = computeKpis(rows);
+    const el = document.getElementById("kpis");
+    el.innerHTML = `
+      <div class="chip">Signals <b>${k.count}</b></div>
+      <div class="chip">OK <b>${k.ok}</b></div>
+      <div class="chip">Skipped <b>${k.skipped}</b></div>
+      <div class="chip">Avg adj <b>${k.avg_score !== null ? k.avg_score.toFixed(3) : "N/A"}</b></div>
+      <div class="chip">Trend OK <b>${k.confirmed}</b> <span class="mono" style="opacity:.7">(${(k.confirmed_pct*100).toFixed(0)}%)</span></div>
+    `;
+  }
+
+  // -------------------------
+  // Table render
+  // -------------------------
+  function getVisibleColumns() {
+    const adv = document.getElementById("showAdvanced").checked;
+    const want = adv ? [...CORE_COLS, ...ADV_COLS] : CORE_COLS;
+
+    // Keep only columns that actually exist
+    const existing = new Set(columns);
+    const visible = want.filter(c => existing.has(c));
+    // fallback: if nothing matches, use all columns
+    return visible.length ? visible : columns;
+  }
+
+  function renderTable(list) {
+    const visibleCols = getVisibleColumns();
+
+    // header
+    const hdr = document.getElementById("hdr");
+    hdr.innerHTML = "";
+    visibleCols.forEach(col => {
+      const th = document.createElement("th");
+      let label = col;
+      if (col === currentSort) label = col + (currentDir === "asc" ? " ▲" : " ▼");
+      th.textContent = label;
+      th.onclick = () => {
+        if (currentSort === col) currentDir = (currentDir === "desc") ? "asc" : "desc";
+        else { currentSort = col; currentDir = "desc"; }
+        document.getElementById("sort").value = col;
+        document.getElementById("dir").value = currentDir;
+        apply();
+      };
+      hdr.appendChild(th);
+    });
+
+    // body
+    const tbody = document.getElementById("body");
+    tbody.innerHTML = "";
+
+    list.forEach((r, idx) => {
+      const tr = document.createElement("tr");
+      tr.dataset.idx = String(idx);
+
+      // keep selection highlight stable by object identity
+      if (lastSelectedRow && r === lastSelectedRow) tr.classList.add("selected");
+
+      tr.onclick = () => {
+        lastSelectedRow = r;
+        selectedIndex = idx;
+        // clear previous selections
+        [...tbody.querySelectorAll("tr")].forEach(x => x.classList.remove("selected"));
+        tr.classList.add("selected");
+        renderDetail(r);
+      };
+
+      visibleCols.forEach(col => {
+        const td = document.createElement("td");
+        const v = r[col];
+
+        // custom renderers
+        if (col === "market_status") {
+          td.innerHTML = statusBadge(r.market_status, r.reason);
+        } else if (["adj_score","score_norm","rs_1m","rs_3m","vol_z20","price","ma50","ma200","score_raw"].includes(col)) {
+          td.classList.add("mono","right");
+          td.textContent = fmt(v, 3);
+        } else if (col === "when_months" || col === "rank") {
+          td.classList.add("mono","right");
+          td.textContent = fmt(v, 0);
+        } else if (col === "why_path") {
+          td.textContent = (v || "").replaceAll("→","→");
+        } else {
+          td.textContent = v ?? "";
+        }
+
+        tr.appendChild(td);
+      });
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  function apply() {
+    const q = document.getElementById("q").value.toLowerCase();
+    const st = document.getElementById("status").value.toLowerCase();
+
+    let filtered = rows.filter(r => {
+      if (st && (String(r.market_status || "").toLowerCase() !== st)) return false;
+      if (!q) return true;
+      const hay = [
+        r.asset, r.symbol, r.market_status, r.reason, r.why_path, r.event_id
+      ].join(" ").toLowerCase();
+      return hay.includes(q);
+    });
+
+    // sort
+    filtered.sort((a,b) => {
+      const ka = a[currentSort];
+      const kb = b[currentSort];
+      const na = toNum(ka);
+      const nb = toNum(kb);
+
+      let cmp = 0;
+      if (na !== null && nb !== null) cmp = na - nb;
+      else cmp = String(ka ?? "").localeCompare(String(kb ?? ""));
+
+      return (currentDir === "desc") ? -cmp : cmp;
+    });
+
+    renderTable(filtered);
+  }
+
+  // -------------------------
+  // Detail render (human)
+  // -------------------------
+  function timeWindowLabel(whenMonths) {
+    const m = toNum(whenMonths);
+    if (m === null) return "Unknown";
+    if (m <= 1) return "Immediate (0–1 mo)";
+    if (m <= 6) return "Near-term (1–6 mo)";
+    if (m <= 18) return "Mid-term (6–18 mo)";
+    return "Long-term (18+ mo)";
+  }
+
+  function renderDetail(r) {
+    const box = document.getElementById("detail");
+
+    const asset = r.asset || "(unknown)";
+    const symbol = r.symbol || "";
+    const status = r.market_status || "";
+    const reason = r.reason || "";
+
+    const score = r.adj_score || r.score_norm || "";
+    const scoreNorm = r.score_norm || "";
+    const adj = r.adj_score || "";
+
+    const wp = r.why_path || r.best_path || "";
+    const when = r.when_months || "";
+    const window = timeWindowLabel(when);
+
+    const rs1 = r.rs_1m;
+    const rs3 = r.rs_3m;
+    const trendOk = (toNum(r.above_ma50) === 1 && toNum(r.golden) === 1);
+
+    const marketLine = (String(status).toLowerCase() !== "ok")
+      ? `Market confirmation is not available: <span class="mono">${escapeHtml(status)}</span> <span class="mono" style="opacity:.75">(${escapeHtml(reason)})</span>`
+      : `Market confirmation: <span class="mono">RS1m=${fmt(rs1,2)}</span>, <span class="mono">RS3m=${fmt(rs3,2)}</span>, <span class="mono">${trendOk ? "trend=OK" : "trend=weak"}</span>, <span class="mono">vol_z20=${fmt(r.vol_z20,2)}</span>`;
+
+    const whyParagraph = `ORION routes the event through <span class="mono">${escapeHtml(wp || "(no path)")}</span>, concentrating impact on <b>${escapeHtml(asset)}</b>.`;
+
+    box.innerHTML = `
+      <div class="cardTitle">
+        <div>
+          <h3>${escapeHtml(asset)} <span class="mono" style="opacity:.75">(${escapeHtml(symbol)})</span></h3>
+          <div class="sub">Event: <span class="mono">${escapeHtml(r.event_id || "N/A")}</span> • ${statusBadge(status, reason)}</div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+          <span class="badge ok" title="Graph score (Week 5) + Market-adjusted score (Week 6)">
+            <span class="dot ok"></span>
+            adj <span class="mono">${escapeHtml(fmt(adj,3))}</span>
+          </span>
+          <span class="badge" title="Graph-only normalized score from Week 5">
+            <span class="dot ok" style="opacity:.35"></span>
+            norm <span class="mono">${escapeHtml(fmt(scoreNorm,3))}</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="kv">
+        <div class="k">Why</div>
+        <div class="v">${whyParagraph}</div>
+
+        <div class="k">Path</div>
+        <div class="v"><div class="path">${escapeHtml(wp || "(no path)")}</div></div>
+
+        <div class="k">When</div>
+        <div class="v">${escapeHtml(window)} <span class="mono" style="opacity:.75">(≈ ${escapeHtml(fmt(when,1))} mo)</span></div>
+
+        <div class="k">Now check</div>
+        <div class="v">${marketLine}</div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="small">
+        <b>Raw row JSON:</b>
+        <pre style="white-space: pre-wrap; font-family: var(--mono); font-size: 12px; margin: 10px 0 0;">${escapeHtml(JSON.stringify(r, null, 2))}</pre>
+      </div>
+    `;
+
+    // hook copy
+    document.getElementById("copyRowBtn").onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(JSON.stringify(r, null, 2));
+        document.getElementById("copyRowBtn").textContent = "Copied ✓";
+        setTimeout(()=>document.getElementById("copyRowBtn").textContent="Copy JSON", 900);
+      } catch {
+        alert("Clipboard blocked. Copy from the JSON in the card.");
+      }
+    };
+
+    // chart placeholder
+    document.getElementById("chartBtn").onclick = () => {
+      alert("Charts v1: next iteration. We’ll add per-symbol OHLC JSON output + an interactive chart here.");
+    };
+  }
+
+  // -------------------------
+  // Brief render (simple)
+  // -------------------------
+  async function loadBrief() {
+    const box = document.getElementById("briefBox");
+    try {
+      const res = await fetch(BRIEF_PATH);
+      const text = await res.text();
+      // minimal markdown-ish rendering: headings + separators + monospace blocks
+      const html = escapeHtml(text)
+        .replace(/^# (.*)$/gm, "<h2>$1</h2>")
+        .replace(/^## (.*)$/gm, "<h3>$1</h3>")
+        .replace(/^### (.*)$/gm, "<h4>$1</h4>")
+        .replace(/^\-\s(.*)$/gm, "<div>• $1</div>")
+        .replace(/`([^`]+)`/g, "<code>$1</code>")
+        .replace(/\n---\n/g, "<hr/>")
+        .replace(/\n/g, "<br/>");
+      box.innerHTML = `<div style="line-height:1.7;">${html}</div>`;
+    } catch (e) {
+      box.innerHTML = `<div class="stub">Could not load brief. Make sure <code>${BRIEF_PATH}</code> exists.</div>`;
+    }
+  }
+
+  // -------------------------
+  // Analytics render (v1)
+  // -------------------------
+  function renderAnalytics() {
+    const box = document.getElementById("analyticsBox");
+    const k = computeKpis(rows);
+
+    // Top themes (very rough: last node keywording)
+    const themeCounts = {};
+    rows.forEach(r => {
+      const wp = String(r.why_path || "");
+      let theme = "Other";
+      if (wp.includes("Semiconductor")) theme = "Semiconductors";
+      else if (wp.includes("AI_") || wp.includes("Data_Centers")) theme = "AI Infrastructure";
+      else if (wp.includes("Power_") || wp.includes("Electricity") || wp.includes("Nuclear") || wp.includes("Uranium")) theme = "Energy & Grid";
+      else if (wp.includes("Defense_")) theme = "Defense";
+      else if (wp.includes("Copper") || wp.includes("Industrial_")) theme = "Infrastructure/Industrials";
+      themeCounts[theme] = (themeCounts[theme] || 0) + 1;
+    });
+
+    const themeList = Object.entries(themeCounts).sort((a,b)=>b[1]-a[1]).slice(0,6);
+
+    box.innerHTML = `
+      <div class="chips" style="margin-bottom:14px;">
+        <div class="chip">Signals <b>${k.count}</b></div>
+        <div class="chip">OK <b>${k.ok}</b></div>
+        <div class="chip">Skipped <b>${k.skipped}</b></div>
+        <div class="chip">Avg adj <b>${k.avg_score !== null ? k.avg_score.toFixed(3) : "N/A"}</b></div>
+        <div class="chip">Trend OK <b>${k.confirmed}</b></div>
+      </div>
+
+      <div class="panel" style="box-shadow:none; border:none; background:transparent;">
+        <h3 style="margin:0 0 8px;">Top themes (heuristic)</h3>
+        <div class="small">This is a placeholder until we wire explicit theme mapping from config.</div>
+        <div style="margin-top:10px;">
+          ${themeList.map(([t,c]) => `<div class="chip" style="justify-content:space-between; width: fit-content; min-width: 260px;"><span>${t}</span><b>${c}</b></div>`).join("")}
+        </div>
+
+        <div class="hr"></div>
+        <h3 style="margin:0 0 8px;">What to improve next</h3>
+        <ul class="small" style="margin-top:8px;">
+          <li>Add batch history: <span class="mono">batches/&lt;batch_id&gt;/</span> + manifest.</li>
+          <li>Attach event title/source/date (Week 4 store) into cards.</li>
+          <li>Add interactive charts by exporting per-symbol OHLC JSON.</li>
+          <li>Add backtest page: forward returns + hit-rate vs SPY/QQQ.</li>
+          <li>Graph viz for why_path trails (node/edge rendering).</li>
+        </ul>
+      </div>
+    `;
+  }
+
+  // -------------------------
+  // Page routing
+  // -------------------------
+  function setPage(page) {
+    // tabs
+    document.querySelectorAll(".tab").forEach(t => {
+      t.classList.toggle("active", t.dataset.page === page);
+    });
+    // pages
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    const el = document.getElementById("page-" + page);
+    if (el) el.classList.add("active");
+
+    // page-specific loads
+    if (page === "brief") loadBrief();
+    if (page === "analytics") renderAnalytics();
+  }
+
+  // -------------------------
+  // Boot
+  // -------------------------
+  async function main() {
+    // init theme
+    const saved = localStorage.getItem("orion_theme") || "dark";
+    setTheme(saved);
+    document.getElementById("themeBtn").onclick = toggleTheme;
+
+    // nav
+    document.getElementById("tabs").addEventListener("click", (e) => {
+      const t = e.target.closest(".tab");
+      if (!t) return;
+      setPage(t.dataset.page);
+    });
+
+    // table controls
+    document.getElementById("q").addEventListener("input", apply);
+    document.getElementById("status").addEventListener("change", apply);
+    document.getElementById("sort").addEventListener("change", (e)=>{ currentSort = e.target.value; apply(); });
+    document.getElementById("dir").addEventListener("change", (e)=>{ currentDir = e.target.value; apply(); });
+    document.getElementById("showAdvanced").addEventListener("change", apply);
+
+    // sticky detail toggle
+    document.getElementById("stickyDetail").addEventListener("change", (e) => {
+      const on = e.target.checked;
+      const panel = document.getElementById("detailPanel");
+      panel.style.position = on ? "sticky" : "static";
+      panel.style.top = on ? "14px" : "auto";
+    });
+    // default sticky on
+    const panel = document.getElementById("detailPanel");
+    panel.style.position = "sticky";
+    panel.style.top = "14px";
+
+    // brief reload
+    document.getElementById("reloadBriefBtn").onclick = loadBrief;
+
+    // load CSV
+    const res = await fetch(CSV_PATH);
+    const text = await res.text();
+    rows = parseCSV(text);
+
+    // infer columns from first row
+    columns = rows.length ? Object.keys(rows[0]) : [];
+
+    // default sort
+    if (!columns.includes(currentSort)) currentSort = columns.includes("score_norm") ? "score_norm" : (columns[0] || "asset");
+
+    // set sort controls
+    document.getElementById("sort").value = columns.includes("adj_score") ? "adj_score" : currentSort;
+
+    renderKpis();
+    apply();
+  }
+
+  main();
+</script>
+</body>
+</html>

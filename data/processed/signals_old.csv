@@ -1,0 +1,61 @@
+event_id,asset,rank,score_raw,score_norm,why_path,when_months,graph_version,created_at
+test,LRCX,1,2.39,1.0,Semiconductor_Manufacturing → Semiconductor_Equipment,9,v1.1,2026-01-21T21:31:35.782536
+test,ASML,2,2.195,0.91841,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:31:35.782608
+test,AMAT,3,1.895,0.792887,Semiconductor_Manufacturing → Semiconductor_Equipment,9,v1.1,2026-01-21T21:31:35.782631
+test,TSM,4,1.5,0.627615,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:31:35.782649
+test,INTC,5,1.5,0.627615,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:31:35.782664
+test,SILICON,6,1.26,0.527197,Semiconductor_Manufacturing → Semiconductor_Materials,4,v1.1,2026-01-21T21:31:35.782677
+test,COPPER,7,1.08,0.451883,Semiconductor_Manufacturing → Industrial_Construction → Copper,15,v1.1,2026-01-21T21:31:35.782699
+test,SOXX,8,1.078,0.451046,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:31:35.782714
+test,SMH,9,1.078,0.451046,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:31:35.782728
+test,QCOM,10,1.0,0.41841,Advanced_Logic_Chips,0,v1.1,2026-01-21T21:31:35.782741
+test,LRCX,1,2.39,1.0,Semiconductor_Manufacturing → Semiconductor_Equipment,9,v1.1,2026-01-21T21:36:35.239512
+test,ASML,2,2.195,0.91841,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:36:35.239587
+test,AMAT,3,1.895,0.792887,Semiconductor_Manufacturing → Semiconductor_Equipment,9,v1.1,2026-01-21T21:36:35.239603
+test,TSM,4,1.5,0.627615,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:36:35.239615
+test,INTC,5,1.5,0.627615,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:36:35.239626
+test,SILICON,6,1.26,0.527197,Semiconductor_Manufacturing → Semiconductor_Materials,4,v1.1,2026-01-21T21:36:35.239635
+test,COPPER,7,1.08,0.451883,Semiconductor_Manufacturing → Industrial_Construction → Copper,15,v1.1,2026-01-21T21:36:35.239646
+test,SOXX,8,1.078,0.451046,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:36:35.239657
+test,SMH,9,1.078,0.451046,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:36:35.239666
+test,QCOM,10,1.0,0.41841,Advanced_Logic_Chips,0,v1.1,2026-01-21T21:36:35.239676
+test,LRCX,1,2.39,1.0,Semiconductor_Manufacturing → Semiconductor_Equipment,9,v1.1,2026-01-21T21:37:55.927487+00:00
+test,ASML,2,2.195,0.91841,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:37:55.927515+00:00
+test,AMAT,3,1.895,0.792887,Semiconductor_Manufacturing → Semiconductor_Equipment,9,v1.1,2026-01-21T21:37:55.927526+00:00
+test,TSM,4,1.5,0.627615,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:37:55.927536+00:00
+test,INTC,5,1.5,0.627615,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:37:55.927544+00:00
+test,SILICON,6,1.26,0.527197,Semiconductor_Manufacturing → Semiconductor_Materials,4,v1.1,2026-01-21T21:37:55.927551+00:00
+test,COPPER,7,1.08,0.451883,Semiconductor_Manufacturing → Industrial_Construction → Copper,15,v1.1,2026-01-21T21:37:55.927561+00:00
+test,SOXX,8,1.078,0.451046,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:37:55.927570+00:00
+test,SMH,9,1.078,0.451046,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:37:55.927577+00:00
+test,QCOM,10,1.0,0.41841,Advanced_Logic_Chips,0,v1.1,2026-01-21T21:37:55.927585+00:00
+test,LRCX,1,2.39,1.0,Semiconductor_Manufacturing → Semiconductor_Equipment,9,v1.1,2026-01-21T21:44:45.101879+00:00
+test,ASML,2,2.195,0.91841,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:44:45.101922+00:00
+test,AMAT,3,1.895,0.792887,Semiconductor_Manufacturing → Semiconductor_Equipment,9,v1.1,2026-01-21T21:44:45.101935+00:00
+test,TSM,4,1.5,0.627615,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:44:45.101947+00:00
+test,INTC,5,1.5,0.627615,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:44:45.101957+00:00
+test,SILICON,6,1.26,0.527197,Semiconductor_Manufacturing → Semiconductor_Materials,4,v1.1,2026-01-21T21:44:45.101966+00:00
+test,COPPER,7,1.08,0.451883,Semiconductor_Manufacturing → Industrial_Construction → Copper,15,v1.1,2026-01-21T21:44:45.101977+00:00
+test,SOXX,8,1.078,0.451046,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:44:45.101987+00:00
+test,SMH,9,1.078,0.451046,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:44:45.101997+00:00
+test,QCOM,10,1.0,0.41841,Advanced_Logic_Chips,0,v1.1,2026-01-21T21:44:45.102006+00:00
+test,LRCX,1,2.39,1.0,Semiconductor_Manufacturing → Semiconductor_Equipment,9,v1.1,2026-01-21T21:53:23.119753+00:00
+test,ASML,2,2.195,0.91841,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:53:23.119787+00:00
+test,AMAT,3,1.895,0.792887,Semiconductor_Manufacturing → Semiconductor_Equipment,9,v1.1,2026-01-21T21:53:23.119797+00:00
+test,TSM,4,1.5,0.627615,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:53:23.119807+00:00
+test,INTC,5,1.5,0.627615,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:53:23.119814+00:00
+test,SILICON,6,1.26,0.527197,Semiconductor_Manufacturing → Semiconductor_Materials,4,v1.1,2026-01-21T21:53:23.119821+00:00
+test,COPPER,7,1.08,0.451883,Semiconductor_Manufacturing → Industrial_Construction → Copper,15,v1.1,2026-01-21T21:53:23.119830+00:00
+test,SOXX,8,1.078,0.451046,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:53:23.119838+00:00
+test,SMH,9,1.078,0.451046,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:53:23.119845+00:00
+test,QCOM,10,1.0,0.41841,Advanced_Logic_Chips,0,v1.1,2026-01-21T21:53:23.119853+00:00
+test,LRCX,1,2.39,1.0,Semiconductor_Manufacturing → Semiconductor_Equipment,9,v1.1,2026-01-21T21:58:38.676764+00:00,2026-01-21T21:58:38.676764+00:00
+test,ASML,2,2.195,0.91841,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:58:38.676764+00:00,2026-01-21T21:58:38.676764+00:00
+test,AMAT,3,1.895,0.792887,Semiconductor_Manufacturing → Semiconductor_Equipment,9,v1.1,2026-01-21T21:58:38.676764+00:00,2026-01-21T21:58:38.676764+00:00
+test,TSM,4,1.5,0.627615,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:58:38.676764+00:00,2026-01-21T21:58:38.676764+00:00
+test,INTC,5,1.5,0.627615,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:58:38.676764+00:00,2026-01-21T21:58:38.676764+00:00
+test,SILICON,6,1.26,0.527197,Semiconductor_Manufacturing → Semiconductor_Materials,4,v1.1,2026-01-21T21:58:38.676764+00:00,2026-01-21T21:58:38.676764+00:00
+test,COPPER,7,1.08,0.451883,Semiconductor_Manufacturing → Industrial_Construction → Copper,15,v1.1,2026-01-21T21:58:38.676764+00:00,2026-01-21T21:58:38.676764+00:00
+test,SOXX,8,1.078,0.451046,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:58:38.676764+00:00,2026-01-21T21:58:38.676764+00:00
+test,SMH,9,1.078,0.451046,Semiconductor_Manufacturing,0,v1.1,2026-01-21T21:58:38.676764+00:00,2026-01-21T21:58:38.676764+00:00
+test,QCOM,10,1.0,0.41841,Advanced_Logic_Chips,0,v1.1,2026-01-21T21:58:38.676764+00:00,2026-01-21T21:58:38.676764+00:00

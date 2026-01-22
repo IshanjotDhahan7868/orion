@@ -1,0 +1,328 @@
+[
+  {
+    "event_id": "test",
+    "asset": "LRCX",
+    "symbol": "LRCX",
+    "score_norm": 1.0,
+    "adj_score": 1.25,
+    "why_path": "Semiconductor_Manufacturing \u2192 Semiconductor_Equipment",
+    "when_months": 9.0,
+    "confirmation_features": {
+      "rs_1m": 0.4219720003307899,
+      "rs_3m": 0.5587776206307948,
+      "above_ma50": 1.0,
+      "above_ma200": 1.0,
+      "golden": 1.0,
+      "vol_z20": -0.1679105937206509,
+      "confirm_score": 1.0,
+      "confirm_rs1m": 1.0,
+      "confirm_rs3m": 1.0,
+      "confirm_trend": 1.0,
+      "confirm_vol": 1.0
+    },
+    "risk_flags": {
+      "type": "equity",
+      "crowding_etf": false,
+      "regulatory": false,
+      "cyclical": false,
+      "notes": []
+    },
+    "market_status": "ok",
+    "reason": "mapped",
+    "timestamp": "2026-01-22T00:13:49.946693+00:00"
+  },
+  {
+    "event_id": "test",
+    "asset": "ASML",
+    "symbol": "ASML",
+    "score_norm": 0.91841,
+    "adj_score": 1.1480125,
+    "why_path": "Semiconductor_Manufacturing",
+    "when_months": 0.0,
+    "confirmation_features": {
+      "rs_1m": 0.2928031548122373,
+      "rs_3m": 0.2751443757074887,
+      "above_ma50": 1.0,
+      "above_ma200": 1.0,
+      "golden": 1.0,
+      "vol_z20": 1.4441345632171592,
+      "confirm_score": 1.0,
+      "confirm_rs1m": 1.0,
+      "confirm_rs3m": 1.0,
+      "confirm_trend": 1.0,
+      "confirm_vol": 1.0
+    },
+    "risk_flags": {
+      "type": "equity",
+      "crowding_etf": false,
+      "regulatory": false,
+      "cyclical": false,
+      "notes": []
+    },
+    "market_status": "ok",
+    "reason": "mapped",
+    "timestamp": "2026-01-22T00:13:49.946911+00:00"
+  },
+  {
+    "event_id": "test",
+    "asset": "AMAT",
+    "symbol": "AMAT",
+    "score_norm": 0.792887,
+    "adj_score": 0.99110875,
+    "why_path": "Semiconductor_Manufacturing \u2192 Semiconductor_Equipment",
+    "when_months": 9.0,
+    "confirmation_features": {
+      "rs_1m": 0.2686735475372527,
+      "rs_3m": 0.4016898875491326,
+      "above_ma50": 1.0,
+      "above_ma200": 1.0,
+      "golden": 1.0,
+      "vol_z20": 0.423527672502117,
+      "confirm_score": 1.0,
+      "confirm_rs1m": 1.0,
+      "confirm_rs3m": 1.0,
+      "confirm_trend": 1.0,
+      "confirm_vol": 1.0
+    },
+    "risk_flags": {
+      "type": "equity",
+      "crowding_etf": false,
+      "regulatory": false,
+      "cyclical": false,
+      "notes": []
+    },
+    "market_status": "ok",
+    "reason": "mapped",
+    "timestamp": "2026-01-22T00:13:49.947089+00:00"
+  },
+  {
+    "event_id": "test",
+    "asset": "TSM",
+    "symbol": "TSM",
+    "score_norm": 0.627615,
+    "adj_score": 0.78451875,
+    "why_path": "Semiconductor_Manufacturing",
+    "when_months": 0.0,
+    "confirmation_features": {
+      "rs_1m": 0.1681371989328347,
+      "rs_3m": 0.0962084343926905,
+      "above_ma50": 1.0,
+      "above_ma200": 1.0,
+      "golden": 1.0,
+      "vol_z20": 1.1713251313253878,
+      "confirm_score": 1.0,
+      "confirm_rs1m": 1.0,
+      "confirm_rs3m": 1.0,
+      "confirm_trend": 1.0,
+      "confirm_vol": 1.0
+    },
+    "risk_flags": {
+      "type": "equity",
+      "crowding_etf": false,
+      "regulatory": false,
+      "cyclical": false,
+      "notes": []
+    },
+    "market_status": "ok",
+    "reason": "mapped",
+    "timestamp": "2026-01-22T00:13:49.947256+00:00"
+  },
+  {
+    "event_id": "test",
+    "asset": "INTC",
+    "symbol": "INTC",
+    "score_norm": 0.627615,
+    "adj_score": 0.78451875,
+    "why_path": "Semiconductor_Manufacturing",
+    "when_months": 0.0,
+    "confirmation_features": {
+      "rs_1m": 0.3339016357506156,
+      "rs_3m": 0.2965768728541924,
+      "above_ma50": 1.0,
+      "above_ma200": 1.0,
+      "golden": 1.0,
+      "vol_z20": 0.990851622835922,
+      "confirm_score": 1.0,
+      "confirm_rs1m": 1.0,
+      "confirm_rs3m": 1.0,
+      "confirm_trend": 1.0,
+      "confirm_vol": 1.0
+    },
+    "risk_flags": {
+      "type": "equity",
+      "crowding_etf": false,
+      "regulatory": false,
+      "cyclical": false,
+      "notes": []
+    },
+    "market_status": "ok",
+    "reason": "mapped",
+    "timestamp": "2026-01-22T00:13:49.947412+00:00"
+  },
+  {
+    "event_id": "test",
+    "asset": "COPPER",
+    "symbol": "CPER",
+    "score_norm": 0.451883,
+    "adj_score": 0.5535566749999999,
+    "why_path": "Semiconductor_Manufacturing \u2192 Industrial_Construction \u2192 Copper",
+    "when_months": 15.0,
+    "confirmation_features": {
+      "rs_1m": 0.0615148830957549,
+      "rs_3m": 0.1431621469148927,
+      "above_ma50": 1.0,
+      "above_ma200": 1.0,
+      "golden": 1.0,
+      "vol_z20": 0.7990269002349383,
+      "confirm_score": 1.0,
+      "confirm_rs1m": 1.0,
+      "confirm_rs3m": 1.0,
+      "confirm_trend": 1.0,
+      "confirm_vol": 1.0
+    },
+    "risk_flags": {
+      "type": "commodity",
+      "crowding_etf": false,
+      "regulatory": false,
+      "cyclical": true,
+      "notes": [
+        "Cyclical sensitivity may increase drawdowns."
+      ]
+    },
+    "market_status": "ok",
+    "reason": "mapped",
+    "timestamp": "2026-01-22T00:13:49.947574+00:00"
+  },
+  {
+    "event_id": "test",
+    "asset": "SOXX",
+    "symbol": "SOXX",
+    "score_norm": 0.451046,
+    "adj_score": 0.55253135,
+    "why_path": "Semiconductor_Manufacturing",
+    "when_months": 0.0,
+    "confirmation_features": {
+      "rs_1m": 0.169613241365868,
+      "rs_3m": 0.1568772967686635,
+      "above_ma50": 1.0,
+      "above_ma200": 1.0,
+      "golden": 1.0,
+      "vol_z20": 0.6714951281073483,
+      "confirm_score": 1.0,
+      "confirm_rs1m": 1.0,
+      "confirm_rs3m": 1.0,
+      "confirm_trend": 1.0,
+      "confirm_vol": 1.0
+    },
+    "risk_flags": {
+      "type": "etf",
+      "crowding_etf": true,
+      "regulatory": false,
+      "cyclical": false,
+      "notes": [
+        "ETF exposure may be crowded."
+      ]
+    },
+    "market_status": "ok",
+    "reason": "mapped",
+    "timestamp": "2026-01-22T00:13:49.947735+00:00"
+  },
+  {
+    "event_id": "test",
+    "asset": "SMH",
+    "symbol": "SMH",
+    "score_norm": 0.451046,
+    "adj_score": 0.55253135,
+    "why_path": "Semiconductor_Manufacturing",
+    "when_months": 0.0,
+    "confirmation_features": {
+      "rs_1m": 0.1412425947186736,
+      "rs_3m": 0.1267699788471172,
+      "above_ma50": 1.0,
+      "above_ma200": 1.0,
+      "golden": 1.0,
+      "vol_z20": 0.4957790005684288,
+      "confirm_score": 1.0,
+      "confirm_rs1m": 1.0,
+      "confirm_rs3m": 1.0,
+      "confirm_trend": 1.0,
+      "confirm_vol": 1.0
+    },
+    "risk_flags": {
+      "type": "etf",
+      "crowding_etf": true,
+      "regulatory": false,
+      "cyclical": false,
+      "notes": [
+        "ETF exposure may be crowded."
+      ]
+    },
+    "market_status": "ok",
+    "reason": "mapped",
+    "timestamp": "2026-01-22T00:13:49.947893+00:00"
+  },
+  {
+    "event_id": "test",
+    "asset": "SILICON",
+    "symbol": "SILICON",
+    "score_norm": 0.527197,
+    "adj_score": 0.4744773,
+    "why_path": "Semiconductor_Manufacturing \u2192 Semiconductor_Materials",
+    "when_months": 4.0,
+    "confirmation_features": {
+      "rs_1m": null,
+      "rs_3m": null,
+      "above_ma50": null,
+      "above_ma200": null,
+      "golden": null,
+      "vol_z20": null,
+      "confirm_score": 0.0,
+      "confirm_rs1m": 0.0,
+      "confirm_rs3m": 0.0,
+      "confirm_trend": 0.0,
+      "confirm_vol": 0.0
+    },
+    "risk_flags": {
+      "type": "commodity",
+      "crowding_etf": false,
+      "regulatory": false,
+      "cyclical": false,
+      "notes": []
+    },
+    "market_status": "skipped",
+    "reason": "no_liquid_proxy",
+    "timestamp": "2026-01-22T00:13:49.948041+00:00"
+  },
+  {
+    "event_id": "test",
+    "asset": "QCOM",
+    "symbol": "QCOM",
+    "score_norm": 0.41841,
+    "adj_score": 0.434100375,
+    "why_path": "Advanced_Logic_Chips",
+    "when_months": 0.0,
+    "confirmation_features": {
+      "rs_1m": -0.1191277727363351,
+      "rs_3m": -0.0680721031379989,
+      "above_ma50": 0.0,
+      "above_ma200": 0.0,
+      "golden": 1.0,
+      "vol_z20": 0.6699952828001238,
+      "confirm_score": 0.15,
+      "confirm_rs1m": 0.0,
+      "confirm_rs3m": 0.0,
+      "confirm_trend": 0.0,
+      "confirm_vol": 1.0
+    },
+    "risk_flags": {
+      "type": "equity",
+      "crowding_etf": false,
+      "regulatory": false,
+      "cyclical": false,
+      "notes": []
+    },
+    "market_status": "ok",
+    "reason": "mapped",
+    "timestamp": "2026-01-22T00:13:49.948214+00:00"
+  }
+]
