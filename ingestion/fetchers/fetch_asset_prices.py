@@ -1,59 +1,111 @@
-import yfinance as yf
+from __future__ import annotations
+
+import os
+from pathlib import Path
+
 import psycopg2
-from datetime import datetime
+import yfinance as yf
 import yaml
 
-DB_CONN = {
-    'host': 'localhost',
-    'dbname': 'orion',
-    'user': 'postgres',
-    'password': '7294'
+BASE_DIR = Path(__file__).resolve().parents[2]
+GRAPH_PATH = BASE_DIR / "config" / "graph.yaml"
+
+
+DEFAULT_DB_CONN = {
+    "host": os.getenv("ORION_DB_HOST", "localhost"),
+    "dbname": os.getenv("ORION_DB_NAME", "orion"),
+    "user": os.getenv("ORION_DB_USER", "postgres"),
+    "password": os.getenv("ORION_DB_PASSWORD", ""),
+    "port": int(os.getenv("ORION_DB_PORT", "5432")),
 }
 
-# List of tickers you want to fetch prices for:
-TICKERS = get_all_tickers_from_graph('config/graph.yaml')
+
+def get_all_tickers_from_graph(graph_path: str | Path) -> list[str]:
+    """Load unique tickers from graph node assets."""
+    with open(graph_path, "r", encoding="utf-8") as f:
+        graph = yaml.safe_load(f) or {}
+
+    tickers: set[str] = set()
+    for node in graph.get("nodes", []):
+        assets = node.get("assets", {}) or {}
+        for key in ("equities", "etfs", "commodities"):
+            for ticker in assets.get(key, []) or []:
+                if isinstance(ticker, str) and ticker.strip():
+                    tickers.add(ticker.strip())
+    return sorted(tickers)
 
 
-
-def get_db_conn():
-    return psycopg2.connect(**DB_CONN)
+TICKERS = get_all_tickers_from_graph(GRAPH_PATH)
 
 
-def get_all_tickers_from_graph(graph_path):
-    with open(graph_path, 'r') as f:
-        graph = yaml.safe_load(f)
+def get_db_conn(conn_info: dict | None = None):
+    conn_cfg = dict(DEFAULT_DB_CONN)
+    if conn_info:
+        conn_cfg.update(conn_info)
 
-    tickers = set()
-    for node in graph['nodes']:
-        assets = node.get('assets', {})
-        for key in ['equities', 'etfs', 'commodities']:
-            for ticker in assets.get(key, []):
-                # Only grab strings (ignore None/empty)
-                if isinstance(ticker, str) and ticker:
-                    tickers.add(ticker)
-    return sorted(list(tickers))
+    if not conn_cfg.get("password"):
+        print("ORION_DB_PASSWORD is not set; attempting DB connection without a password.")
+
+    return psycopg2.connect(**conn_cfg)
 
 
-def fetch_and_store_prices():
-    with get_db_conn() as conn, conn.cursor() as cur:
-        for ticker in TICKERS:
+def _safe_float(v):
+    if v is None:
+        return None
+    try:
+        return float(v)
+    except Exception:
+        return None
+
+
+def _safe_int(v):
+    if v is None:
+        return None
+    try:
+        return int(v)
+    except Exception:
+        return None
+
+
+def fetch_and_store_prices(tickers: list[str] | None = None, conn_info: dict | None = None) -> None:
+    tickers = tickers or TICKERS
+    if not tickers:
+        print("No tickers found in graph config; nothing to fetch.")
+        return
+
+    with get_db_conn(conn_info) as conn, conn.cursor() as cur:
+        for ticker in tickers:
             print(f"Fetching {ticker}...")
             try:
                 data = yf.download(ticker, period="2y", interval="1d", progress=False)
+                if data is None or data.empty:
+                    print(f"No data returned for {ticker}; skipping.")
+                    continue
+
+                inserted = 0
                 for date, row in data.iterrows():
-                    price_date = date.date()
-                    close = float(row['Close'].iloc[0]) if hasattr(row['Close'], 'iloc') else float(row['Close'])
-                    volume = int(row['Volume'].iloc[0]) if hasattr(row['Volume'], 'iloc') else int(row['Volume'])
-                    cur.execute("""
+                    close = _safe_float(row.get("Close"))
+                    volume = _safe_int(row.get("Volume"))
+                    if close is None:
+                        continue
+
+                    cur.execute(
+                        """
                         INSERT INTO asset_prices (ticker, price_date, close, volume)
                         VALUES (%s, %s, %s, %s)
                         ON CONFLICT (ticker, price_date) DO NOTHING
-                    """, (ticker, price_date, close, volume))
-                print(f"Stored price history for {ticker}")
-            except Exception as e:
-                print(f"Failed to fetch/store {ticker}: {e}")
+                        """,
+                        (ticker, date.date(), close, volume),
+                    )
+                    inserted += 1
+
+                print(f"Stored {inserted} rows for {ticker}")
+            except Exception as exc:
+                print(f"Failed to fetch/store {ticker}: {exc}")
+
         conn.commit()
     print("Done fetching price history.")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     fetch_and_store_prices()

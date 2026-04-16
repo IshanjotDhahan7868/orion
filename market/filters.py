@@ -74,8 +74,8 @@ def confirm_and_rescore(
     df["confirm_rs1m"] = (df.get("rs_1m", pd.Series([pd.NA]*len(df))) >= thresholds["min_rs_1m"]).fillna(False).astype(int)
     df["confirm_rs3m"] = (df.get("rs_3m", pd.Series([pd.NA]*len(df))) >= thresholds["min_rs_3m"]).fillna(False).astype(int)
 
-    above_ma50 = df.get("above_ma50", 0).fillna(0).astype(int)
-    golden = df.get("golden", 0).fillna(0).astype(int)
+    above_ma50 = df.get("above_ma50", pd.Series([0]*len(df))).fillna(0).astype(int)
+    golden = df.get("golden", pd.Series([0]*len(df))).fillna(0).astype(int)
     df["confirm_trend"] = (above_ma50 & golden).astype(int)
 
     df["confirm_vol"] = (df.get("vol_z20", pd.Series([pd.NA]*len(df))) >= thresholds["min_vol_z"]).fillna(False).astype(int)
