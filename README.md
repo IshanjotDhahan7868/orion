@@ -268,3 +268,45 @@ orion/
         app.py
         components/
         static/
+## Quick Runbook (Current Implementation)
+
+### One-command run
+
+```bash
+python scripts/run_all.py
+```
+
+### Stage-by-stage run
+
+```bash
+python scripts/week4_dry_run.py
+python scripts/week5_dry_run.py
+python scripts/week6_market_check.py
+python scripts/week7_export_signals.py
+```
+
+### Orchestrator options
+
+```bash
+python scripts/run_all.py --from-week 5 --to-week 7 --print-commands
+python scripts/run_all.py --from-week 4 --to-week 7 --no-stop-on-error
+```
+
+### Expected artifacts
+
+- `data/processed/signals.csv` (Week 5)
+- `data/processed/signals_week6.csv` (Week 6 market-checked)
+- `data/processed/signals_v1_2.json` (Week 7 exported signals)
+- `data/processed/weekly_brief.md` (Week 7 brief)
+
+### Common failure modes
+
+- **Missing Week 5 output:** Week 6 exits if `signals.csv` does not exist.
+- **No market mapping:** assets without a symbol mapping are marked as skipped/missing and softly penalized.
+- **No DB password for price ingestion:** `ORION_DB_PASSWORD` defaults to empty; set env vars before loading price history into Postgres.
+
+### Current limitations and next enhancements
+
+- Event extraction/classification is still rule-based and should be expanded with richer patterns.
+- Risk flag logic is intentionally conservative and can be made theme-aware.
+- Backtest/learning modules are scaffold-level and meant for offline artifact iteration before production automation.
