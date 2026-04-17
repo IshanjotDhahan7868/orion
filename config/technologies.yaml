@@ -54,3 +54,108 @@ energy_storage:
     - grid storage
   nodes:
     - Energy_Storage
+
+cloud_infrastructure:
+  aliases:
+    - cloud infrastructure
+    - hyperscale cloud
+    - cloud platform
+    - cloud capacity
+  nodes:
+    - Cloud_Infrastructure
+
+cybersecurity:
+  aliases:
+    - cybersecurity
+    - cyber security
+    - endpoint security
+    - zero trust
+  nodes:
+    - Cybersecurity
+
+enterprise_software:
+  aliases:
+    - enterprise software
+    - workflow software
+    - crm software
+    - automation software
+  nodes:
+    - Enterprise_SaaS
+
+digital_ads:
+  aliases:
+    - digital advertising
+    - ad tech
+    - online advertising
+  nodes:
+    - Digital_Advertising
+
+payments:
+  aliases:
+    - digital payments
+    - card payments
+    - payment network
+    - payment processing
+  nodes:
+    - Payments_Networks
+
+capital_markets:
+  aliases:
+    - capital markets
+    - trading volumes
+    - wealth management
+    - prime brokerage
+  nodes:
+    - Capital_Markets
+
+industrial_automation:
+  aliases:
+    - industrial automation
+    - factory automation
+    - robotics
+    - machine vision
+  nodes:
+    - Industrial_Automation
+
+logistics_shipping:
+  aliases:
+    - logistics
+    - freight
+    - shipping volumes
+    - parcel delivery
+  nodes:
+    - Logistics_and_Shipping
+
+rare_earths:
+  aliases:
+    - rare earths
+    - rare earth materials
+    - magnet materials
+  nodes:
+    - Rare_Earths
+
+lng_exports:
+  aliases:
+    - lng
+    - liquefied natural gas
+    - gas export terminal
+  nodes:
+    - LNG_and_Gas_Export
+
+ecommerce:
+  aliases:
+    - e-commerce
+    - ecommerce
+    - online marketplace
+    - digital retail
+  nodes:
+    - E_Commerce_and_Marketplaces
+
+autonomy:
+  aliases:
+    - autonomous driving
+    - robotaxi
+    - autonomy
+    - self driving
+  nodes:
+    - EVs_and_Autonomy

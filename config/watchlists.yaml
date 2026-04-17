@@ -1,0 +1,122 @@
+institutional_core:
+  notes: Highest-visibility North American and global liquid names often monitored across institutional desks.
+  assets:
+    - NVDA
+    - MSFT
+    - GOOGL
+    - AMZN
+    - META
+    - AAPL
+    - AVGO
+    - JPM
+    - GS
+    - BAC
+    - WFC
+    - BLK
+    - V
+    - MA
+    - BRK.B
+    - XOM
+    - CVX
+    - LMT
+    - RTX
+    - NOC
+    - CAT
+    - DE
+    - GE
+    - TSLA
+    - TSM
+    - ASML
+    - AMAT
+    - LRCX
+    - MU
+    - QCOM
+    - ORCL
+    - ANET
+    - EQIX
+    - DLR
+
+macro_etfs:
+  notes: Core index, factor, sector, and macro proxy ETFs.
+  assets:
+    - SPY
+    - QQQ
+    - DIA
+    - IWM
+    - VTI
+    - VEA
+    - VWO
+    - XLF
+    - XLK
+    - XLI
+    - XLE
+    - XLU
+    - XLB
+    - XLV
+    - XLP
+    - XLY
+    - SMH
+    - SOXX
+    - ITA
+    - XAR
+    - PAVE
+    - SRVR
+    - COPX
+    - URA
+    - URNM
+    - LIT
+    - GLD
+    - SLV
+    - USO
+    - UNG
+    - HYG
+    - LQD
+    - TIP
+    - BIL
+
+semis_ai_power:
+  notes: ORION core buildout complex across semis, data center infra, utilities, and electrification.
+  assets:
+    - NVDA
+    - AMD
+    - AVGO
+    - ARM
+    - MU
+    - TSM
+    - ASML
+    - AMAT
+    - LRCX
+    - KLAC
+    - MRVL
+    - ANET
+    - ORCL
+    - EQIX
+    - DLR
+    - VRT
+    - ETN
+    - HUBB
+    - NEE
+    - CEG
+    - VST
+    - SO
+    - PWR
+    - COPPER
+
+global_heavyweights:
+  notes: Widely followed non-US leaders relevant to ORION themes.
+  assets:
+    - TSM
+    - ASML
+    - SAP
+    - SIEGY
+    - SONY
+    - BABA
+    - BIDU
+    - TCEHY
+    - MELI
+    - RIO
+    - BHP
+    - SHEL
+    - BP
+    - ABB
+    - CNI

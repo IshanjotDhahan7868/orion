@@ -19,6 +19,7 @@ data/raw/
 data/intermediate/
 data/tmp/
 data/cache/
+data/*.db
 data/processed/signals.csv
 
 # OS

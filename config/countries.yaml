@@ -4,3 +4,57 @@ US:
     - U.S.
     - America
     - Arizona
+
+CN:
+  aliases:
+    - China
+    - Chinese
+    - Beijing
+    - Shanghai
+
+TW:
+  aliases:
+    - Taiwan
+    - Taiwanese
+
+CA:
+  aliases:
+    - Canada
+    - Canadian
+    - Ontario
+    - Alberta
+
+JP:
+  aliases:
+    - Japan
+    - Japanese
+    - Tokyo
+
+KR:
+  aliases:
+    - South Korea
+    - Korea
+    - Korean
+
+EU:
+  aliases:
+    - Europe
+    - European Union
+    - EU
+
+DE:
+  aliases:
+    - Germany
+    - German
+
+FR:
+  aliases:
+    - France
+    - French
+
+UK:
+  aliases:
+    - United Kingdom
+    - Britain
+    - British
+    - London

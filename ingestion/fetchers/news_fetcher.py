@@ -1,13 +1,14 @@
 import feedparser
 import hashlib
+import os
 import psycopg2
 from datetime import datetime
 
 DB_CONN = {
-    'host': 'localhost',
-    'dbname': 'orion',
-    'user': 'postgres',
-    'password': '7294'  # <--- put your postgres password here
+    'host': os.getenv('ORION_DB_HOST', 'localhost'),
+    'dbname': os.getenv('ORION_DB_NAME', 'orion'),
+    'user': os.getenv('ORION_DB_USER', 'postgres'),
+    'password': os.getenv('ORION_DB_PASSWORD', ''),
 }
 
 RSS_FEEDS = [
@@ -19,6 +20,8 @@ RSS_FEEDS = [
 ]
 
 def get_db_conn():
+    if not DB_CONN['password']:
+        print('ORION_DB_PASSWORD is not set; attempting DB connection without a password.')
     return psycopg2.connect(**DB_CONN)
 
 def make_hash(headline, published, source):

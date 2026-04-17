@@ -9,9 +9,26 @@ TSM:
 NVDA:
   aliases:
     - Nvidia
+    - NVIDIA
   nodes:
     - AI_Compute_Demand
     - AI_Models_and_Software
+
+AAPL:
+  aliases:
+    - Apple
+  nodes:
+    - AI_Models_and_Software
+    - Advanced_Logic_Chips
+
+AMZN:
+  aliases:
+    - Amazon
+    - AWS
+    - Amazon Web Services
+  nodes:
+    - AI_Models_and_Software
+    - Data_Centers
 
 AMD:
   aliases:
@@ -59,6 +76,53 @@ QCOM:
   nodes:
     - Advanced_Logic_Chips
 
+AVGO:
+  aliases:
+    - Broadcom
+  nodes:
+    - AI_Networking
+    - Advanced_Logic_Chips
+
+ARM:
+  aliases:
+    - Arm Holdings
+    - ARM Holdings
+  nodes:
+    - Advanced_Logic_Chips
+
+MU:
+  aliases:
+    - Micron
+    - Micron Technology
+  nodes:
+    - Memory_Chips
+    - Semiconductor_Manufacturing
+
+KLAC:
+  aliases:
+    - KLA
+    - KLA Corp
+  nodes:
+    - Semiconductor_Equipment
+
+TER:
+  aliases:
+    - Teradyne
+  nodes:
+    - Semiconductor_Equipment
+
+ENTG:
+  aliases:
+    - Entegris
+  nodes:
+    - Semiconductor_Materials
+
+WOLF:
+  aliases:
+    - Wolfspeed
+  nodes:
+    - Semiconductor_Materials
+
 MSFT:
   aliases:
     - Microsoft
@@ -87,3 +151,253 @@ ORCL:
     - Oracle
   nodes:
     - Data_Centers
+
+DLR:
+  aliases:
+    - Digital Realty
+  nodes:
+    - Data_Centers
+
+AMT:
+  aliases:
+    - American Tower
+  nodes:
+    - Data_Centers
+    - AI_Networking
+
+ANET:
+  aliases:
+    - Arista
+    - Arista Networks
+  nodes:
+    - AI_Networking
+    - Data_Centers
+
+CSCO:
+  aliases:
+    - Cisco
+    - Cisco Systems
+  nodes:
+    - AI_Networking
+
+VRT:
+  aliases:
+    - Vertiv
+  nodes:
+    - AI_Cooling_and_Thermal
+    - Data_Centers
+
+CARR:
+  aliases:
+    - Carrier
+    - Carrier Global
+  nodes:
+    - AI_Cooling_and_Thermal
+
+TT:
+  aliases:
+    - Trane
+    - Trane Technologies
+  nodes:
+    - AI_Cooling_and_Thermal
+
+CEG:
+  aliases:
+    - Constellation Energy
+  nodes:
+    - Nuclear_Energy
+    - Power_Generation
+
+VST:
+  aliases:
+    - Vistra
+  nodes:
+    - Power_Generation
+
+SO:
+  aliases:
+    - Southern Company
+  nodes:
+    - Power_Generation
+    - Power_Grid_Infrastructure
+
+AEP:
+  aliases:
+    - American Electric Power
+  nodes:
+    - Power_Grid_Infrastructure
+
+PWR:
+  aliases:
+    - Quanta Services
+  nodes:
+    - Power_Grid_Infrastructure
+    - Industrial_Construction
+
+ETN:
+  aliases:
+    - Eaton
+    - Eaton Corporation
+  nodes:
+    - Electrical_Equipment
+
+HUBB:
+  aliases:
+    - Hubbell
+  nodes:
+    - Electrical_Equipment
+
+ABB:
+  aliases:
+    - ABB
+  nodes:
+    - Electrical_Equipment
+
+GEV:
+  aliases:
+    - GE Vernova
+  nodes:
+    - Electrical_Equipment
+    - Power_Generation
+
+J:
+  aliases:
+    - Jacobs
+    - Jacobs Solutions
+  nodes:
+    - Industrial_Construction
+
+FLR:
+  aliases:
+    - Fluor
+  nodes:
+    - Industrial_Construction
+
+ACM:
+  aliases:
+    - AECOM
+  nodes:
+    - Industrial_Construction
+
+CAT:
+  aliases:
+    - Caterpillar
+  nodes:
+    - Industrial_Construction
+
+DE:
+  aliases:
+    - Deere
+    - John Deere
+  nodes:
+    - Industrial_Construction
+
+LMT:
+  aliases:
+    - Lockheed Martin
+  nodes:
+    - Aerospace_and_Defense_Manufacturing
+    - Defense_Electronics
+
+RTX:
+  aliases:
+    - RTX
+    - Raytheon
+  nodes:
+    - Aerospace_and_Defense_Manufacturing
+    - Defense_Electronics
+
+NOC:
+  aliases:
+    - Northrop Grumman
+  nodes:
+    - Aerospace_and_Defense_Manufacturing
+
+GD:
+  aliases:
+    - General Dynamics
+  nodes:
+    - Aerospace_and_Defense_Manufacturing
+
+LHX:
+  aliases:
+    - L3Harris
+  nodes:
+    - Defense_Electronics
+
+XOM:
+  aliases:
+    - Exxon
+    - ExxonMobil
+  nodes:
+    - Oil_and_Gas
+
+CVX:
+  aliases:
+    - Chevron
+  nodes:
+    - Oil_and_Gas
+
+SHEL:
+  aliases:
+    - Shell
+  nodes:
+    - Oil_and_Gas
+
+BP:
+  aliases:
+    - BP
+    - British Petroleum
+  nodes:
+    - Oil_and_Gas
+
+CNQ:
+  aliases:
+    - Canadian Natural Resources
+  nodes:
+    - Oil_and_Gas
+
+FCX:
+  aliases:
+    - Freeport
+    - Freeport-McMoRan
+  nodes:
+    - Copper
+
+SCCO:
+  aliases:
+    - Southern Copper
+  nodes:
+    - Copper
+
+RIO:
+  aliases:
+    - Rio Tinto
+  nodes:
+    - Copper
+
+BHP:
+  aliases:
+    - BHP
+    - BHP Group
+  nodes:
+    - Copper
+
+CCJ:
+  aliases:
+    - Cameco
+  nodes:
+    - Uranium
+    - Nuclear_Energy
+
+NXE:
+  aliases:
+    - NexGen Energy
+  nodes:
+    - Uranium
+
+UUUU:
+  aliases:
+    - Energy Fuels
+  nodes:
+    - Uranium

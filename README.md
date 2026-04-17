@@ -1,5 +1,18 @@
 ORION Macro-Signal Investing System
 
+Workspace status (April 2026)
+
+- Root repo: Python pipeline, causal graph, scoring, data model, scripts, and docs
+- Web app: `apps/web` (Next.js dashboard + chat surface)
+- Standalone frontend backup archived at: `/home/ishan/Documents/Projects/_archive/orion-web-standalone-2026-04-16`
+
+Recommended local workflow
+
+- Pipeline/test work from repo root: `python`, `pytest`, `scripts/run_all.py`
+- Engine API from repo root: `python3 scripts/run_engine.py`
+- Web app work from `apps/web`: `npm install`, `npm run dev`, `npm run build`
+- Web app env template: `apps/web/.env.local.example`
+
 Permanent Project Instructions
 
 Project Description

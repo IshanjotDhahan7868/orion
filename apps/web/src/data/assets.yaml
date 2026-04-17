@@ -1,0 +1,305 @@
+# ORION asset → node mapping with explicit types.
+# Types: equity | etf | commodity
+
+NVDA:
+  type: equity
+  nodes: [AI_Compute_Demand, AI_Models_and_Software, Advanced_Logic_Chips]
+
+AMD:
+  type: equity
+  nodes: [AI_Compute_Demand, Advanced_Logic_Chips]
+
+TSM:
+  type: equity
+  nodes: [Semiconductor_Manufacturing, Advanced_Logic_Chips]
+
+ASML:
+  type: equity
+  nodes: [Semiconductor_Equipment, Semiconductor_Manufacturing]
+
+INTC:
+  type: equity
+  nodes: [Semiconductor_Manufacturing, Advanced_Logic_Chips]
+
+AMAT:
+  type: equity
+  nodes: [Semiconductor_Equipment, Semiconductor_Materials]
+
+LRCX:
+  type: equity
+  nodes: [Semiconductor_Equipment]
+
+MRVL:
+  type: equity
+  nodes: [AI_Networking, Advanced_Logic_Chips]
+
+QCOM:
+  type: equity
+  nodes: [Advanced_Logic_Chips]
+
+BIDU:
+  type: equity
+  nodes: [AI_Models_and_Software]
+
+MSFT:
+  type: equity
+  nodes: [AI_Models_and_Software, Data_Centers]
+
+GOOGL:
+  type: equity
+  nodes: [AI_Models_and_Software, Data_Centers]
+
+META:
+  type: equity
+  nodes: [AI_Models_and_Software, Data_Centers]
+
+ORCL:
+  type: equity
+  nodes: [Data_Centers]
+
+EQIX:
+  type: equity
+  nodes: [Data_Centers]
+
+NEE:
+  type: equity
+  nodes: [Power_Grid_Infrastructure, Power_Generation]
+
+DUK:
+  type: equity
+  nodes: [Power_Grid_Infrastructure, Power_Generation]
+
+XEL:
+  type: equity
+  nodes: [Power_Grid_Infrastructure, Power_Generation, Energy_Storage]
+
+ENPH:
+  type: equity
+  nodes: [Electrical_Equipment, Power_Generation, Energy_Storage]
+
+FSLR:
+  type: equity
+  nodes: [Power_Generation, Semiconductor_Materials]
+
+SOXX:
+  type: etf
+  nodes: [Semiconductor_Manufacturing, Semiconductor_Equipment, Advanced_Logic_Chips]
+
+SMH:
+  type: etf
+  nodes: [Semiconductor_Manufacturing, Semiconductor_Equipment, Advanced_Logic_Chips]
+
+XLK:
+  type: etf
+  nodes: [AI_Models_and_Software, Data_Centers]
+
+XLU:
+  type: etf
+  nodes: [Power_Grid_Infrastructure, Power_Generation]
+
+ICLN:
+  type: etf
+  nodes: [Power_Generation]
+
+COPPER:
+  type: commodity
+  nodes: [Copper]
+
+SILICON:
+  type: commodity
+  nodes: [Semiconductor_Materials]
+
+LITHIUM:
+  type: commodity
+  nodes: [Lithium]
+
+CATHODE:
+  type: commodity
+  nodes: [Cathode_Materials]
+
+COBALT:
+  type: commodity
+  nodes: [Cobalt]
+
+# === Phase 6 Expansion Assets ===
+
+# Macro
+TLT:
+  type: etf
+  nodes: [Interest_Rates]
+
+TIP:
+  type: etf
+  nodes: [Inflation, Interest_Rates]
+
+UUP:
+  type: etf
+  nodes: [USD_Strength]
+
+HYG:
+  type: etf
+  nodes: [Credit_Spreads, Banking_Capital]
+
+LQD:
+  type: etf
+  nodes: [Credit_Spreads]
+
+# Financials
+JPM:
+  type: equity
+  nodes: [Banking_Capital, Private_Credit]
+
+BAC:
+  type: equity
+  nodes: [Banking_Capital]
+
+GS:
+  type: equity
+  nodes: [Banking_Capital, Private_Credit]
+
+BX:
+  type: equity
+  nodes: [Private_Credit]
+
+ARCC:
+  type: equity
+  nodes: [Private_Credit]
+
+# Robotics & AI Agents
+ISRG:
+  type: equity
+  nodes: [Robotics, Medical_Devices]
+
+FANUY:
+  type: equity
+  nodes: [Robotics]
+
+PATH:
+  type: equity
+  nodes: [AI_Agents, Robotics]
+
+BOTZ:
+  type: etf
+  nodes: [Robotics, AI_Agents]
+
+# Healthcare / Biotech
+MRNA:
+  type: equity
+  nodes: [Drug_Development, Biotech_Manufacturing]
+
+REGN:
+  type: equity
+  nodes: [Drug_Development]
+
+ABBV:
+  type: equity
+  nodes: [Drug_Development]
+
+CDMO:
+  type: equity
+  nodes: [Biotech_Manufacturing]
+
+XBI:
+  type: etf
+  nodes: [Drug_Development, Biotech_Manufacturing]
+
+IBB:
+  type: etf
+  nodes: [Drug_Development, Medical_Devices]
+
+# Consumer / E-Commerce / Logistics
+AMZN:
+  type: equity
+  nodes: [E_Commerce_and_Fulfillment, Data_Centers, Logistics_and_Freight]
+
+SHOP:
+  type: equity
+  nodes: [E_Commerce_and_Fulfillment]
+
+UPS:
+  type: equity
+  nodes: [Logistics_and_Freight]
+
+FDX:
+  type: equity
+  nodes: [Logistics_and_Freight]
+
+XRT:
+  type: etf
+  nodes: [Consumer_Discretionary_Demand, E_Commerce_and_Fulfillment]
+
+# Emerging Markets
+INFY:
+  type: equity
+  nodes: [India_Manufacturing]
+
+WIT:
+  type: equity
+  nodes: [India_Manufacturing]
+
+EWI:
+  type: etf
+  nodes: [India_Manufacturing]
+
+VNM:
+  type: etf
+  nodes: [Southeast_Asia_Supply]
+
+# Commodities - Phase 6
+SILVER:
+  type: commodity
+  nodes: [Silver]
+
+SLV:
+  type: etf
+  nodes: [Silver]
+
+NATGAS:
+  type: commodity
+  nodes: [Natural_Gas]
+
+UNG:
+  type: etf
+  nodes: [Natural_Gas]
+
+ALUMINUM:
+  type: commodity
+  nodes: [Aluminum]
+
+RARE_EARTH:
+  type: etf
+  nodes: [Rare_Earth_Elements]
+
+MP:
+  type: equity
+  nodes: [Rare_Earth_Elements]
+
+UAMY:
+  type: equity
+  nodes: [Rare_Earth_Elements]
+
+# EV / Energy Transition
+TSLA:
+  type: equity
+  nodes: [EV_Adoption, Advanced_Logic_Chips]
+
+LI:
+  type: equity
+  nodes: [EV_Adoption]
+
+RIVN:
+  type: equity
+  nodes: [EV_Adoption]
+
+DRIV:
+  type: etf
+  nodes: [EV_Adoption, Advanced_Logic_Chips]
+
+# Nuclear
+CCJ:
+  type: equity
+  nodes: [Nuclear_Energy, Uranium]
+
+NLR:
+  type: etf
+  nodes: [Nuclear_Energy, Uranium]

@@ -1,6 +1,6 @@
-# orion/scripts/week7_export_signals.py
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
@@ -12,11 +12,15 @@ for path in (ROOT_PARENT, ROOT_DIR):
     if path_str not in sys.path:
         sys.path.insert(0, path_str)
 
-from orion.signals.exporter import export
+import uvicorn
 
 
 def main() -> None:
-    export(top_n=20)
+    host = os.getenv("ORION_ENGINE_HOST", "0.0.0.0")
+    port = int(os.getenv("ORION_ENGINE_PORT", "8000"))
+    reload = os.getenv("ORION_ENGINE_RELOAD", "0") == "1"
+    uvicorn.run("api.app:app", host=host, port=port, reload=reload)
+
 
 if __name__ == "__main__":
     main()
