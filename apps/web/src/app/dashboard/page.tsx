@@ -1,5 +1,10 @@
+import { redirect } from 'next/navigation'
+
+import { AppShell } from '@/components/app-shell'
 import { getLatestSignals, getLatestEvents, getLatestPortfolioSnapshot, getLatestBrief, getWatchlists } from '@/lib/db'
 import { getGraphEdges, getGraphNodes, getAssetMappings } from '@/lib/graph'
+import { getActiveAccountContext } from '@/lib/account'
+import { getPlanByKey } from '@/lib/billing'
 
 export const dynamic = 'force-dynamic'
 import { SignalsTable } from '@/components/signals-table'
@@ -7,7 +12,6 @@ import { OrionChat } from '@/components/chat'
 import { GraphExplorer } from '@/components/graph-explorer'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
 
 function EventTypeBadge({ type }: { type: string }) {
   const colors: Record<string, string> = {
@@ -89,6 +93,9 @@ function buildExplorerData(signals: Awaited<ReturnType<typeof getLatestSignals>>
 }
 
 export default async function DashboardPage() {
+  const account = await getActiveAccountContext()
+  if (!account) redirect('/sign-in')
+
   const [signals, events, portfolio, brief, watchlists] = await Promise.all([
     getLatestSignals(50).catch(() => []),
     getLatestEvents(15).catch(() => []),
@@ -96,6 +103,7 @@ export default async function DashboardPage() {
     getLatestBrief().catch(() => null),
     getWatchlists().catch(() => []),
   ])
+  const plan = getPlanByKey(account.profile.plan_key)
   const explorer = buildExplorerData(signals)
   const confirmedCount = signals.filter(signal => signal.confirmed).length
   const avgTopScore =
@@ -105,28 +113,14 @@ export default async function DashboardPage() {
   const topSignal = signals[0] ?? null
 
   return (
-    <div className="flex flex-col h-screen bg-zinc-950">
-      {/* Header */}
-      <header className="border-b border-zinc-800 px-4 py-3 flex items-center gap-4 shrink-0">
-        <div className="flex items-center gap-2">
-          <span className="text-blue-400 font-bold text-lg">⬡</span>
-          <span className="font-mono font-bold text-zinc-100 tracking-wider">ORION</span>
-          <span className="text-zinc-600 text-xs font-mono">v1.0 / MACRO INTELLIGENCE</span>
-        </div>
-        <Separator orientation="vertical" className="h-4 bg-zinc-700" />
-        <div className="flex items-center gap-3 text-xs font-mono text-zinc-500">
-          <span>{signals.length} signals</span>
-          <span>·</span>
-          <span>{events.length} events</span>
-          <span>·</span>
-          <span>{confirmedCount} confirmed</span>
-          <span>·</span>
-          <span className="text-emerald-500">● live</span>
-        </div>
-      </header>
-
-      {/* Main layout: signals left, chat right */}
-      <div className="flex flex-1 min-h-0 divide-x divide-zinc-800">
+    <AppShell
+      currentPath="/dashboard"
+      title="Live Intelligence Terminal"
+      subtitle={`${signals.length} signals · ${confirmedCount} confirmed · ${events.length} events in current surface`}
+      planLabel={plan.name}
+      buyerType={account.profile.buyer_type}
+    >
+      <div className="flex min-h-[calc(100vh-14rem)] divide-x divide-zinc-800 overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/70">
         {/* Left: Signals + Events */}
         <div className="flex flex-col w-3/5 min-h-0 divide-y divide-zinc-800">
           <div className="mx-4 mt-4 rounded-xl border border-cyan-500/20 bg-cyan-500/8 px-4 py-3 shrink-0">
@@ -134,7 +128,11 @@ export default async function DashboardPage() {
               <div>
                 <p className="text-[10px] uppercase tracking-[0.28em] text-cyan-300 font-mono">Commercial Lens</p>
                 <p className="mt-1 text-sm text-zinc-100">
-                  This is currently strongest as a high-ticket pilot or research terminal, not broad self-serve SaaS.
+                  {account.profile.buyer_type === 'family_office'
+                    ? 'Position ORION as a macro allocation and regime-monitoring layer for long-horizon capital.'
+                    : account.profile.buyer_type === 'ria'
+                    ? 'Position ORION as a client-safe intelligence layer that explains portfolio tilts in plain English.'
+                    : 'This is currently strongest as a high-ticket pilot or research terminal, not broad self-serve SaaS.'}
                 </p>
                 <p className="mt-1 text-xs text-zinc-400">
                   To sell harder: prove repeatable signal quality, tighten event freshness, add auth/billing, and show customer-specific workflows.
@@ -275,6 +273,6 @@ export default async function DashboardPage() {
           </div>
         </div>
       </div>
-    </div>
+    </AppShell>
   )
 }

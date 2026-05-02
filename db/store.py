@@ -117,6 +117,38 @@ def ensure_initialized() -> None:
                 metadata_json TEXT NOT NULL,
                 created_at TEXT NOT NULL
             );
+
+            CREATE TABLE IF NOT EXISTS customer_accounts (
+                clerk_user_id TEXT PRIMARY KEY,
+                email TEXT,
+                full_name TEXT,
+                buyer_type TEXT NOT NULL,
+                organization_name TEXT,
+                onboarding_notes TEXT,
+                stripe_customer_id TEXT,
+                stripe_subscription_id TEXT,
+                stripe_price_id TEXT,
+                stripe_product_name TEXT,
+                subscription_status TEXT NOT NULL,
+                plan_key TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS alert_destinations (
+                alert_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                clerk_user_id TEXT NOT NULL,
+                label TEXT NOT NULL,
+                channel TEXT NOT NULL,
+                destination TEXT NOT NULL,
+                min_score REAL NOT NULL,
+                confirmed_only INTEGER NOT NULL,
+                buyer_type TEXT,
+                active INTEGER NOT NULL,
+                last_sent_at TEXT,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            );
             """
         )
 
@@ -467,6 +499,239 @@ def latest_brief() -> dict[str, Any] | None:
         "metadata": json.loads(row["metadata_json"]),
         "created_at": row["created_at"],
     }
+
+
+def list_briefs(limit: int = 10) -> list[dict[str, Any]]:
+    ensure_initialized()
+    with connect() as conn:
+        rows = conn.execute(
+            """
+            SELECT brief_id, brief_date, title, body, metadata_json, created_at
+            FROM analyst_briefs
+            ORDER BY created_at DESC
+            LIMIT ?
+            """,
+            (limit,),
+        ).fetchall()
+    return [
+        {
+            "brief_id": row["brief_id"],
+            "brief_date": row["brief_date"],
+            "title": row["title"],
+            "body": row["body"],
+            "metadata": json.loads(row["metadata_json"]),
+            "created_at": row["created_at"],
+        }
+        for row in rows
+    ]
+
+
+def get_customer_account(clerk_user_id: str) -> dict[str, Any] | None:
+    ensure_initialized()
+    with connect() as conn:
+        row = conn.execute(
+            """
+            SELECT clerk_user_id, email, full_name, buyer_type, organization_name,
+                   onboarding_notes, stripe_customer_id, stripe_subscription_id,
+                   stripe_price_id, stripe_product_name, subscription_status, plan_key,
+                   created_at, updated_at
+            FROM customer_accounts
+            WHERE clerk_user_id = ?
+            """,
+            (clerk_user_id,),
+        ).fetchone()
+    if row is None:
+        return None
+    return dict(row)
+
+
+def upsert_customer_account(
+    clerk_user_id: str,
+    email: str | None = None,
+    full_name: str | None = None,
+    buyer_type: str | None = None,
+    organization_name: str | None = None,
+    onboarding_notes: str | None = None,
+    stripe_customer_id: str | None = None,
+    stripe_subscription_id: str | None = None,
+    stripe_price_id: str | None = None,
+    stripe_product_name: str | None = None,
+    subscription_status: str | None = None,
+    plan_key: str | None = None,
+) -> dict[str, Any]:
+    ensure_initialized()
+    existing = get_customer_account(clerk_user_id) or {}
+    now = utc_now()
+    payload = {
+        "clerk_user_id": clerk_user_id,
+        "email": email if email is not None else existing.get("email"),
+        "full_name": full_name if full_name is not None else existing.get("full_name"),
+        "buyer_type": buyer_type if buyer_type is not None else existing.get("buyer_type", "hedge_fund"),
+        "organization_name": (
+            organization_name if organization_name is not None else existing.get("organization_name", "")
+        ),
+        "onboarding_notes": (
+            onboarding_notes if onboarding_notes is not None else existing.get("onboarding_notes", "")
+        ),
+        "stripe_customer_id": (
+            stripe_customer_id if stripe_customer_id is not None else existing.get("stripe_customer_id")
+        ),
+        "stripe_subscription_id": (
+            stripe_subscription_id
+            if stripe_subscription_id is not None
+            else existing.get("stripe_subscription_id")
+        ),
+        "stripe_price_id": stripe_price_id if stripe_price_id is not None else existing.get("stripe_price_id"),
+        "stripe_product_name": (
+            stripe_product_name if stripe_product_name is not None else existing.get("stripe_product_name")
+        ),
+        "subscription_status": (
+            subscription_status if subscription_status is not None else existing.get("subscription_status", "inactive")
+        ),
+        "plan_key": plan_key if plan_key is not None else existing.get("plan_key", "free"),
+        "created_at": existing.get("created_at", now),
+        "updated_at": now,
+    }
+
+    with connect() as conn:
+        conn.execute(
+            """
+            INSERT INTO customer_accounts(
+                clerk_user_id, email, full_name, buyer_type, organization_name,
+                onboarding_notes, stripe_customer_id, stripe_subscription_id,
+                stripe_price_id, stripe_product_name, subscription_status, plan_key,
+                created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(clerk_user_id) DO UPDATE SET
+                email=excluded.email,
+                full_name=excluded.full_name,
+                buyer_type=excluded.buyer_type,
+                organization_name=excluded.organization_name,
+                onboarding_notes=excluded.onboarding_notes,
+                stripe_customer_id=excluded.stripe_customer_id,
+                stripe_subscription_id=excluded.stripe_subscription_id,
+                stripe_price_id=excluded.stripe_price_id,
+                stripe_product_name=excluded.stripe_product_name,
+                subscription_status=excluded.subscription_status,
+                plan_key=excluded.plan_key,
+                updated_at=excluded.updated_at
+            """,
+            (
+                payload["clerk_user_id"],
+                payload["email"],
+                payload["full_name"],
+                payload["buyer_type"],
+                payload["organization_name"],
+                payload["onboarding_notes"],
+                payload["stripe_customer_id"],
+                payload["stripe_subscription_id"],
+                payload["stripe_price_id"],
+                payload["stripe_product_name"],
+                payload["subscription_status"],
+                payload["plan_key"],
+                payload["created_at"],
+                payload["updated_at"],
+            ),
+        )
+
+    return payload
+
+
+def create_alert_destination(
+    clerk_user_id: str,
+    label: str,
+    channel: str,
+    destination: str,
+    min_score: float = 0.7,
+    confirmed_only: bool = True,
+    buyer_type: str | None = None,
+    active: bool = True,
+) -> dict[str, Any]:
+    ensure_initialized()
+    now = utc_now()
+    with connect() as conn:
+        cur = conn.execute(
+            """
+            INSERT INTO alert_destinations(
+                clerk_user_id, label, channel, destination, min_score, confirmed_only,
+                buyer_type, active, last_sent_at, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                clerk_user_id,
+                label,
+                channel,
+                destination,
+                float(min_score),
+                1 if confirmed_only else 0,
+                buyer_type,
+                1 if active else 0,
+                None,
+                now,
+                now,
+            ),
+        )
+        alert_id = int(cur.lastrowid)
+    return {
+        "alert_id": alert_id,
+        "clerk_user_id": clerk_user_id,
+        "label": label,
+        "channel": channel,
+        "destination": destination,
+        "min_score": float(min_score),
+        "confirmed_only": bool(confirmed_only),
+        "buyer_type": buyer_type,
+        "active": bool(active),
+        "last_sent_at": None,
+        "created_at": now,
+        "updated_at": now,
+    }
+
+
+def list_alert_destinations(clerk_user_id: str) -> list[dict[str, Any]]:
+    ensure_initialized()
+    with connect() as conn:
+        rows = conn.execute(
+            """
+            SELECT alert_id, clerk_user_id, label, channel, destination, min_score,
+                   confirmed_only, buyer_type, active, last_sent_at, created_at, updated_at
+            FROM alert_destinations
+            WHERE clerk_user_id = ?
+            ORDER BY updated_at DESC, alert_id DESC
+            """,
+            (clerk_user_id,),
+        ).fetchall()
+    return [
+        {
+            "alert_id": row["alert_id"],
+            "clerk_user_id": row["clerk_user_id"],
+            "label": row["label"],
+            "channel": row["channel"],
+            "destination": row["destination"],
+            "min_score": float(row["min_score"]),
+            "confirmed_only": bool(row["confirmed_only"]),
+            "buyer_type": row["buyer_type"],
+            "active": bool(row["active"]),
+            "last_sent_at": row["last_sent_at"],
+            "created_at": row["created_at"],
+            "updated_at": row["updated_at"],
+        }
+        for row in rows
+    ]
+
+
+def mark_alert_sent(alert_id: int) -> None:
+    ensure_initialized()
+    now = utc_now()
+    with connect() as conn:
+        conn.execute(
+            """
+            UPDATE alert_destinations
+            SET last_sent_at = ?, updated_at = ?
+            WHERE alert_id = ?
+            """,
+            (now, now, alert_id),
+        )
 
 
 def generate_brief_prompt(

@@ -10,19 +10,25 @@ import pandas as pd
 import yaml
 
 from db.store import (
+    create_alert_destination,
     ensure_initialized,
     generate_brief_prompt,
     generate_brief_with_ollama,
+    get_customer_account,
+    list_alert_destinations,
+    list_briefs,
     latest_brief,
     latest_portfolio_snapshot,
     list_watchlists,
     load_cached_events,
     load_cached_signals,
+    mark_alert_sent,
     refresh_market_intelligence,
     save_brief,
     save_portfolio_snapshot,
     seed_ontology_from_config,
     seed_watchlists_from_config,
+    upsert_customer_account,
     upsert_watchlist,
 )
 from execution.position_sizing import build_capped_weights
@@ -31,6 +37,7 @@ from graph.dependency_graph import DependencyGraph
 from graph.propagate import propagate_impact
 from processing.entity_extraction import extract_entities
 from processing.event_builder import build_event
+from signals.delivery import deliver_signal_alert
 
 
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -490,3 +497,273 @@ def generate_daily_brief(
 
 def get_latest_brief() -> dict[str, Any] | None:
     return latest_brief()
+
+
+def get_or_create_account_profile(
+    clerk_user_id: str,
+    email: str | None = None,
+    full_name: str | None = None,
+) -> dict[str, Any]:
+    existing = get_customer_account(clerk_user_id)
+    if existing is not None:
+        return existing
+    return upsert_customer_account(
+        clerk_user_id=clerk_user_id,
+        email=email,
+        full_name=full_name,
+        buyer_type="hedge_fund",
+        subscription_status="inactive",
+        plan_key="free",
+    )
+
+
+def update_account_profile(
+    clerk_user_id: str,
+    email: str | None = None,
+    full_name: str | None = None,
+    buyer_type: str | None = None,
+    organization_name: str | None = None,
+    onboarding_notes: str | None = None,
+) -> dict[str, Any]:
+    return upsert_customer_account(
+        clerk_user_id=clerk_user_id,
+        email=email,
+        full_name=full_name,
+        buyer_type=buyer_type,
+        organization_name=organization_name,
+        onboarding_notes=onboarding_notes,
+    )
+
+
+def update_account_billing(
+    clerk_user_id: str,
+    *,
+    stripe_customer_id: str | None = None,
+    stripe_subscription_id: str | None = None,
+    stripe_price_id: str | None = None,
+    stripe_product_name: str | None = None,
+    subscription_status: str | None = None,
+    plan_key: str | None = None,
+) -> dict[str, Any]:
+    return upsert_customer_account(
+        clerk_user_id=clerk_user_id,
+        stripe_customer_id=stripe_customer_id,
+        stripe_subscription_id=stripe_subscription_id,
+        stripe_price_id=stripe_price_id,
+        stripe_product_name=stripe_product_name,
+        subscription_status=subscription_status,
+        plan_key=plan_key,
+    )
+
+
+def list_account_alerts(clerk_user_id: str) -> list[dict[str, Any]]:
+    return list_alert_destinations(clerk_user_id)
+
+
+def create_account_alert(
+    clerk_user_id: str,
+    label: str,
+    channel: str,
+    destination: str,
+    min_score: float = 0.7,
+    confirmed_only: bool = True,
+) -> dict[str, Any]:
+    profile = get_or_create_account_profile(clerk_user_id)
+    return create_alert_destination(
+        clerk_user_id=clerk_user_id,
+        label=label,
+        channel=channel,
+        destination=destination,
+        min_score=min_score,
+        confirmed_only=confirmed_only,
+        buyer_type=profile.get("buyer_type"),
+        active=True,
+    )
+
+
+def build_alert_payload(clerk_user_id: str, alert_id: int | None = None) -> dict[str, Any]:
+    profile = get_or_create_account_profile(clerk_user_id)
+    alerts = list_alert_destinations(clerk_user_id)
+    if not alerts:
+        return {
+            "profile": profile,
+            "alerts": [],
+            "deliveries": [],
+            "message": "No alert destinations configured.",
+        }
+
+    if alert_id is not None:
+        alerts = [alert for alert in alerts if alert["alert_id"] == alert_id]
+        if not alerts:
+            return {
+                "profile": profile,
+                "alerts": [],
+                "deliveries": [],
+                "message": f"Alert {alert_id} not found for this account.",
+            }
+
+    signals = list_signals(limit=25)
+    deliveries = []
+    for alert in alerts:
+        selected = [
+            signal
+            for signal in signals
+            if signal["adjusted_score"] >= alert["min_score"]
+            and (signal["confirmed"] or not alert["confirmed_only"])
+        ][:5]
+        if not selected:
+            deliveries.append(
+                {
+                    "alert_id": alert["alert_id"],
+                    "label": alert["label"],
+                    "ok": False,
+                    "reason": "No signals matched the alert filters.",
+                }
+            )
+            continue
+
+        lines = [
+            f"{signal['asset']} score={signal['adjusted_score']:.2f} lag={signal['when_months']}mo path={signal['why_path']}"
+            for signal in selected
+        ]
+        subject = f"ORION alert: {alert['label']}"
+        body = (
+            f"Buyer type: {profile.get('buyer_type', 'hedge_fund')}\n"
+            f"Plan: {profile.get('plan_key', 'free')}\n\n"
+            "Top matching signals:\n"
+            + "\n".join(f"- {line}" for line in lines)
+        )
+        delivery = deliver_signal_alert(
+            channel=alert["channel"],
+            destination=alert["destination"],
+            subject=subject,
+            body=body,
+            metadata={
+                "clerk_user_id": clerk_user_id,
+                "alert_id": alert["alert_id"],
+                "buyer_type": profile.get("buyer_type"),
+            },
+        )
+        if delivery.get("ok"):
+            mark_alert_sent(alert["alert_id"])
+        deliveries.append(
+            {
+                "alert_id": alert["alert_id"],
+                "label": alert["label"],
+                "channel": alert["channel"],
+                "destination": alert["destination"],
+                "signals": selected,
+                **delivery,
+            }
+        )
+
+    return {
+        "profile": profile,
+        "alerts": alerts,
+        "deliveries": deliveries,
+        "message": f"Prepared {len(deliveries)} alert delivery attempt(s).",
+    }
+
+
+def get_performance_summary() -> dict[str, Any]:
+    signals = list_signals(limit=200)
+    events = list_recent_events(limit=100)
+    briefs = list_briefs(limit=12)
+    portfolio = latest_portfolio_snapshot()
+
+    total_signals = len(signals)
+    confirmed_signals = [signal for signal in signals if signal["confirmed"]]
+    avg_score = (
+        round(sum(float(signal["adjusted_score"]) for signal in signals) / total_signals, 4)
+        if total_signals
+        else 0.0
+    )
+    confirmed_rate = round(len(confirmed_signals) / total_signals, 4) if total_signals else 0.0
+    avg_lag = (
+        round(sum(float(signal["when_months"]) for signal in signals) / total_signals, 2)
+        if total_signals
+        else 0.0
+    )
+
+    theme_exposure: dict[str, float] = {}
+    event_type_counts: dict[str, int] = {}
+    for signal in signals:
+        for node in [part.strip() for part in str(signal["why_path"]).replace("->", "→").split("→") if part.strip()]:
+            event_type_counts[node] = event_type_counts.get(node, 0) + 1
+    if portfolio:
+        theme_exposure = {
+            key: float(value)
+            for key, value in (portfolio.get("summary", {}).get("theme_exposure") or {}).items()
+        }
+
+    top_assets = [
+        {
+            "asset": signal["asset"],
+            "score": float(signal["adjusted_score"]),
+            "confirmed": bool(signal["confirmed"]),
+            "lag_months": float(signal["when_months"]),
+            "event_type": signal.get("event_type"),
+            "why_path": signal["why_path"],
+            "created_at": signal["created_at"],
+        }
+        for signal in signals[:20]
+    ]
+
+    recent_briefs = [
+        {
+            "brief_id": brief["brief_id"],
+            "brief_date": brief["brief_date"],
+            "title": brief["title"],
+            "created_at": brief["created_at"],
+        }
+        for brief in briefs
+    ]
+
+    proof_points = [
+        {
+            "label": "Market-confirmed hit rate",
+            "value": confirmed_rate,
+            "display": f"{confirmed_rate * 100:.1f}%",
+            "description": "Share of current signals passing market confirmation filters.",
+        },
+        {
+            "label": "Average signal strength",
+            "value": avg_score,
+            "display": f"{avg_score:.2f}",
+            "description": "Average adjusted score across the latest signal set.",
+        },
+        {
+            "label": "Average lag to thesis horizon",
+            "value": avg_lag,
+            "display": f"{avg_lag:.1f} mo",
+            "description": "Average modeled time horizon across current signals.",
+        },
+        {
+            "label": "Saved briefs",
+            "value": len(briefs),
+            "display": str(len(briefs)),
+            "description": "Analyst brief archive available for replay and customer review.",
+        },
+    ]
+
+    return {
+        "metrics": {
+            "total_signals": total_signals,
+            "confirmed_signals": len(confirmed_signals),
+            "confirmed_rate": confirmed_rate,
+            "average_score": avg_score,
+            "average_lag_months": avg_lag,
+            "events_tracked": len(events),
+            "briefs_saved": len(briefs),
+        },
+        "proof_points": proof_points,
+        "theme_exposure": theme_exposure,
+        "signal_history": top_assets,
+        "recent_briefs": recent_briefs,
+        "event_nodes": sorted(
+            [{"name": name, "count": count} for name, count in event_type_counts.items()],
+            key=lambda item: item["count"],
+            reverse=True,
+        )[:12],
+        "portfolio": portfolio,
+    }

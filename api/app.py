@@ -5,17 +5,24 @@ from pydantic import BaseModel, Field
 
 from api.service import (
     build_portfolio_recommendation,
+    build_alert_payload,
+    create_account_alert,
     create_portfolio_snapshot,
     generate_daily_brief,
+    get_or_create_account_profile,
+    get_performance_summary,
     get_graph_node,
     get_latest_brief,
     get_latest_portfolio_snapshot,
     get_watchlists,
+    list_account_alerts,
     list_recent_events,
     list_signals,
     refresh_intelligence_state,
     run_what_if,
     set_watchlist,
+    update_account_billing,
+    update_account_profile,
 )
 
 
@@ -43,6 +50,34 @@ class WatchlistRequest(BaseModel):
 class BriefRequest(BaseModel):
     watchlist_name: str = Field(default="core", min_length=1, max_length=64)
     use_ai: bool = True
+
+
+class AccountProfileRequest(BaseModel):
+    clerk_user_id: str = Field(..., min_length=1)
+    email: str | None = None
+    full_name: str | None = None
+    buyer_type: str | None = None
+    organization_name: str | None = None
+    onboarding_notes: str | None = None
+
+
+class BillingUpdateRequest(BaseModel):
+    clerk_user_id: str = Field(..., min_length=1)
+    stripe_customer_id: str | None = None
+    stripe_subscription_id: str | None = None
+    stripe_price_id: str | None = None
+    stripe_product_name: str | None = None
+    subscription_status: str | None = None
+    plan_key: str | None = None
+
+
+class AlertRequest(BaseModel):
+    clerk_user_id: str = Field(..., min_length=1)
+    label: str = Field(..., min_length=1, max_length=120)
+    channel: str = Field(..., min_length=1, max_length=32)
+    destination: str = Field(..., min_length=3, max_length=512)
+    min_score: float = Field(default=0.7, ge=0.0)
+    confirmed_only: bool = True
 
 
 app = FastAPI(
@@ -143,3 +178,61 @@ def api_briefs_latest() -> dict:
 @app.post("/api/briefs/generate")
 def api_briefs_generate(payload: BriefRequest) -> dict:
     return generate_daily_brief(watchlist_name=payload.watchlist_name, use_ai=payload.use_ai)
+
+
+@app.get("/api/performance")
+def api_performance() -> dict:
+    return get_performance_summary()
+
+
+@app.get("/api/account/{clerk_user_id}")
+def api_account(clerk_user_id: str, email: str | None = None, full_name: str | None = None) -> dict:
+    return get_or_create_account_profile(clerk_user_id=clerk_user_id, email=email, full_name=full_name)
+
+
+@app.post("/api/account")
+def api_account_upsert(payload: AccountProfileRequest) -> dict:
+    return update_account_profile(
+        clerk_user_id=payload.clerk_user_id,
+        email=payload.email,
+        full_name=payload.full_name,
+        buyer_type=payload.buyer_type,
+        organization_name=payload.organization_name,
+        onboarding_notes=payload.onboarding_notes,
+    )
+
+
+@app.post("/api/account/billing")
+def api_account_billing(payload: BillingUpdateRequest) -> dict:
+    return update_account_billing(
+        clerk_user_id=payload.clerk_user_id,
+        stripe_customer_id=payload.stripe_customer_id,
+        stripe_subscription_id=payload.stripe_subscription_id,
+        stripe_price_id=payload.stripe_price_id,
+        stripe_product_name=payload.stripe_product_name,
+        subscription_status=payload.subscription_status,
+        plan_key=payload.plan_key,
+    )
+
+
+@app.get("/api/alerts/{clerk_user_id}")
+def api_alerts(clerk_user_id: str) -> dict:
+    alerts = list_account_alerts(clerk_user_id)
+    return {"alerts": alerts, "count": len(alerts)}
+
+
+@app.post("/api/alerts")
+def api_alerts_create(payload: AlertRequest) -> dict:
+    return create_account_alert(
+        clerk_user_id=payload.clerk_user_id,
+        label=payload.label,
+        channel=payload.channel,
+        destination=payload.destination,
+        min_score=payload.min_score,
+        confirmed_only=payload.confirmed_only,
+    )
+
+
+@app.post("/api/alerts/test")
+def api_alerts_test(clerk_user_id: str, alert_id: int | None = None) -> dict:
+    return build_alert_payload(clerk_user_id=clerk_user_id, alert_id=alert_id)

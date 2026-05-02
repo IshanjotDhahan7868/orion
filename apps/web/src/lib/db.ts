@@ -72,6 +72,77 @@ export interface AnalystBrief {
   created_at: string
 }
 
+export interface AccountProfile {
+  clerk_user_id: string
+  email?: string | null
+  full_name?: string | null
+  buyer_type: string
+  organization_name?: string | null
+  onboarding_notes?: string | null
+  stripe_customer_id?: string | null
+  stripe_subscription_id?: string | null
+  stripe_price_id?: string | null
+  stripe_product_name?: string | null
+  subscription_status: string
+  plan_key: string
+  created_at: string
+  updated_at: string
+}
+
+export interface AlertDestination {
+  alert_id: number
+  clerk_user_id: string
+  label: string
+  channel: string
+  destination: string
+  min_score: number
+  confirmed_only: boolean
+  buyer_type?: string | null
+  active: boolean
+  last_sent_at?: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface PerformanceSummary {
+  metrics: {
+    total_signals: number
+    confirmed_signals: number
+    confirmed_rate: number
+    average_score: number
+    average_lag_months: number
+    events_tracked: number
+    briefs_saved: number
+  }
+  proof_points: Array<{
+    label: string
+    value: number
+    display: string
+    description: string
+  }>
+  theme_exposure: Record<string, number>
+  signal_history: Array<{
+    asset: string
+    score: number
+    confirmed: boolean
+    lag_months: number
+    event_type?: string
+    why_path: string
+    created_at: string
+  }>
+  recent_briefs: Array<{
+    brief_id: number
+    brief_date: string
+    title: string
+    created_at: string
+  }>
+  event_nodes: Array<{
+    name: string
+    count: number
+  }>
+  portfolio: PortfolioSnapshot | null
+}
+
 function getEngineUrl(): string {
   return process.env.ORION_ENGINE_URL || 'http://localhost:8000'
 }
@@ -205,6 +276,94 @@ export async function getWatchlists(): Promise<Watchlist[]> {
 export async function getLatestBrief(): Promise<AnalystBrief | null> {
   const payload = await tryFetchJson<AnalystBrief>('/api/briefs/latest')
   return payload ?? null
+}
+
+export async function getPerformanceSummary(): Promise<PerformanceSummary | null> {
+  return await tryFetchJson<PerformanceSummary>('/api/performance')
+}
+
+export async function getAccountProfile(
+  clerkUserId: string,
+  email?: string,
+  fullName?: string
+): Promise<AccountProfile | null> {
+  const params = new URLSearchParams()
+  if (email) params.set('email', email)
+  if (fullName) params.set('full_name', fullName)
+  const query = params.toString()
+  return await tryFetchJson<AccountProfile>(`/api/account/${clerkUserId}${query ? `?${query}` : ''}`)
+}
+
+export async function saveAccountProfile(payload: {
+  clerk_user_id: string
+  email?: string | null
+  full_name?: string | null
+  buyer_type?: string | null
+  organization_name?: string | null
+  onboarding_notes?: string | null
+}): Promise<AccountProfile | null> {
+  try {
+    const res = await fetch(`${getEngineUrl()}/api/account`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      cache: 'no-store',
+    })
+    if (!res.ok) return null
+    return (await res.json()) as AccountProfile
+  } catch {
+    return null
+  }
+}
+
+export async function getAlerts(clerkUserId: string): Promise<AlertDestination[]> {
+  const payload = await tryFetchJson<{ alerts: AlertDestination[] }>(`/api/alerts/${clerkUserId}`)
+  return payload?.alerts ?? []
+}
+
+export async function createAlert(payload: {
+  clerk_user_id: string
+  label: string
+  channel: string
+  destination: string
+  min_score?: number
+  confirmed_only?: boolean
+}): Promise<AlertDestination | null> {
+  try {
+    const res = await fetch(`${getEngineUrl()}/api/alerts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      cache: 'no-store',
+    })
+    if (!res.ok) return null
+    return (await res.json()) as AlertDestination
+  } catch {
+    return null
+  }
+}
+
+export async function updateAccountBilling(payload: {
+  clerk_user_id: string
+  stripe_customer_id?: string | null
+  stripe_subscription_id?: string | null
+  stripe_price_id?: string | null
+  stripe_product_name?: string | null
+  subscription_status?: string | null
+  plan_key?: string | null
+}): Promise<AccountProfile | null> {
+  try {
+    const res = await fetch(`${getEngineUrl()}/api/account/billing`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      cache: 'no-store',
+    })
+    if (!res.ok) return null
+    return (await res.json()) as AccountProfile
+  } catch {
+    return null
+  }
 }
 
 export async function getTopSignalsContext(limit = 30): Promise<string> {

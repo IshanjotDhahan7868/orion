@@ -1,13 +1,20 @@
+import { auth, currentUser } from '@clerk/nextjs/server'
 import { streamText, tool, stepCountIs } from 'ai'
 import { z } from 'zod'
 import { getAIModel } from '@/lib/ai-provider'
 import { getGraphSystemPrompt, getNodeById } from '@/lib/graph'
-import { getTopSignalsContext, getRecentEventsContext, getLatestSignals } from '@/lib/db'
+import { getAccountProfile, getTopSignalsContext, getRecentEventsContext, getLatestSignals } from '@/lib/db'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
 
 export async function POST(req: Request) {
+  const { userId } = await auth()
+  if (!userId) {
+    return new Response('Unauthorized', { status: 401 })
+  }
+
+  const user = await currentUser()
   const { messages } = await req.json()
 
   // Fetch live context to inject into each request
@@ -24,7 +31,23 @@ ${signalsCtx}
 ${eventsCtx}
 `
 
-  const systemPrompt = getGraphSystemPrompt() + '\n\n' + dynamicContext
+  const profile = await getAccountProfile(
+    userId,
+    user?.emailAddresses[0]?.emailAddress,
+    [user?.firstName, user?.lastName].filter(Boolean).join(' ') || user?.username || undefined
+  )
+
+  const buyerContext = `
+## BUYER CONTEXT
+- Buyer type: ${profile?.buyer_type ?? 'hedge_fund'}
+- Organization: ${profile?.organization_name || 'unspecified'}
+- Plan: ${profile?.plan_key || 'free'}
+- Notes: ${profile?.onboarding_notes || 'none'}
+
+Tailor your output to this buyer. Speak in terms of decision usefulness, portfolio relevance, and paid workflow value. Avoid generic "AI assistant" phrasing.
+`
+
+  const systemPrompt = getGraphSystemPrompt() + '\n\n' + buyerContext + '\n\n' + dynamicContext
 
   const result = streamText({
     model: getAIModel(),
