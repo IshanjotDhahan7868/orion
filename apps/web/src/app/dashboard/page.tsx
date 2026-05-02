@@ -97,6 +97,12 @@ export default async function DashboardPage() {
     getWatchlists().catch(() => []),
   ])
   const explorer = buildExplorerData(signals)
+  const confirmedCount = signals.filter(signal => signal.confirmed).length
+  const avgTopScore =
+    signals.length > 0
+      ? signals.slice(0, 10).reduce((sum, signal) => sum + signal.adjusted_score, 0) / Math.min(signals.length, 10)
+      : 0
+  const topSignal = signals[0] ?? null
 
   return (
     <div className="flex flex-col h-screen bg-zinc-950">
@@ -113,6 +119,8 @@ export default async function DashboardPage() {
           <span>·</span>
           <span>{events.length} events</span>
           <span>·</span>
+          <span>{confirmedCount} confirmed</span>
+          <span>·</span>
           <span className="text-emerald-500">● live</span>
         </div>
       </header>
@@ -121,6 +129,23 @@ export default async function DashboardPage() {
       <div className="flex flex-1 min-h-0 divide-x divide-zinc-800">
         {/* Left: Signals + Events */}
         <div className="flex flex-col w-3/5 min-h-0 divide-y divide-zinc-800">
+          <div className="mx-4 mt-4 rounded-xl border border-cyan-500/20 bg-cyan-500/8 px-4 py-3 shrink-0">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.28em] text-cyan-300 font-mono">Commercial Lens</p>
+                <p className="mt-1 text-sm text-zinc-100">
+                  This is currently strongest as a high-ticket pilot or research terminal, not broad self-serve SaaS.
+                </p>
+                <p className="mt-1 text-xs text-zinc-400">
+                  To sell harder: prove repeatable signal quality, tighten event freshness, add auth/billing, and show customer-specific workflows.
+                </p>
+              </div>
+              <Badge variant="outline" className="border-cyan-400/30 bg-cyan-400/10 text-cyan-200 text-[10px] font-mono">
+                DEMOABLE NOW
+              </Badge>
+            </div>
+          </div>
+
           <div className="grid grid-cols-3 gap-3 p-4 border-b border-zinc-800/50 bg-zinc-950/70 shrink-0">
             <Card className="border-zinc-800 bg-zinc-900/60 p-3">
               <p className="text-[10px] uppercase tracking-[0.25em] text-zinc-500 font-mono">Portfolio</p>
@@ -163,19 +188,40 @@ export default async function DashboardPage() {
             </Card>
 
             <Card className="border-zinc-800 bg-zinc-900/60 p-3">
-              <p className="text-[10px] uppercase tracking-[0.25em] text-zinc-500 font-mono">Analyst Brief</p>
-              {brief ? (
+              <p className="text-[10px] uppercase tracking-[0.25em] text-zinc-500 font-mono">Signal Quality</p>
+              {signals.length ? (
                 <div className="mt-2 space-y-1.5">
-                  <p className="text-zinc-100 text-sm font-semibold truncate">{brief.title}</p>
-                  <p className="text-zinc-400 text-xs line-clamp-3 whitespace-pre-wrap">
-                    {brief.body}
+                  <p className="text-zinc-100 text-sm font-semibold">
+                    avg top-10 {avgTopScore.toFixed(2)} · {confirmedCount}/{signals.length} confirmed
                   </p>
+                  <p className="text-zinc-400 text-xs">
+                    strongest live idea: {topSignal?.asset ?? '—'} {topSignal ? topSignal.adjusted_score.toFixed(2) : ''}
+                  </p>
+                  <div className="flex flex-wrap gap-1 pt-1">
+                    {topSignal ? (
+                      <Badge variant="outline" className="text-[10px] border-cyan-500/30 text-cyan-300 bg-cyan-500/10">
+                        {topSignal.why_path || topSignal.asset}
+                      </Badge>
+                    ) : null}
+                  </div>
                 </div>
               ) : (
-                <p className="mt-2 text-zinc-600 text-xs">No brief generated yet.</p>
+                <p className="mt-2 text-zinc-600 text-xs">No signals generated yet.</p>
               )}
             </Card>
           </div>
+
+          {brief ? (
+            <div className="px-4 pb-4 shrink-0 border-b border-zinc-800/50">
+              <Card className="border-zinc-800 bg-zinc-900/60 p-4">
+                <p className="text-[10px] uppercase tracking-[0.25em] text-zinc-500 font-mono">Analyst Brief</p>
+                <p className="mt-2 text-zinc-100 text-sm font-semibold truncate">{brief.title}</p>
+                <p className="mt-2 text-zinc-400 text-xs line-clamp-4 whitespace-pre-wrap">
+                  {brief.body}
+                </p>
+              </Card>
+            </div>
+          ) : null}
 
           <div className="p-4 border-b border-zinc-800/50 shrink-0">
             <GraphExplorer nodes={explorer.nodes} links={explorer.links} />
